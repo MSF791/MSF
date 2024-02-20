@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registrar Producto</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+</head>
+<body>
+  <!--inicio del alert-->
+     {% if mensaje %}
+     <div class="alert alert-success alert-dismissible fade show m-4" role="alert" id="autoCloseAlert">
+       {{ mensaje }}
+       <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+     </div>
+     <script>
+    setTimeout(function() {
+      document.getElementById('autoCloseAlert').style.display = 'none';
+    }, 3000);
+  </script>
+   {% endif %}
+   <!--fin del alert-->
+
+   {% if form.errors %}
+  <div class="alert alert-danger alert-dismissible fade show m-4" role="alert">
+    <strong>Error:</strong> Por favor, corrige los siguientes errores.
+    <ul>
+      {% for error in form.errors.items %}
+        <li>{{ error }}</li>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      {% endfor %}
+    </ul>
+  </div>
+    {% endif %}
+    <div class="container">
+        <div class="row justify-content-center">
+        <form class="col-md-8 g-3" action="{% url 'create_producto' %}" method="POST" autocomplete="off" enctype="multipart/form-data">
+        {% csrf_token %}
+        <h1>Registro Productos</h1><br>
+          <div class="mb-3">
+            <label for="exampleFormControlInput1" class="form-label">Nombre Producto</label>
+            <input type="text" name="nombre" class="form-control" id="exampleFormControlInput1" placeholder="Digite El Nombre Del Producto">
+          </div>
+          <div class="mb-3">
+            <label for="exampleFormControlTextarea1" class="form-label">Descripcion Producto</label>
+            <textarea class="form-control" name="descripcion" id="exampleFormControlTextarea1" rows="3" placeholder="Digite La Descripcion Del Producto"></textarea>
+          </div>
+          <div class="mb-3">
+            <label for="exampleFormControlInput1" class="form-label">Precio Producto</label>
+            <input type="number" name="precio" class="form-control" id="exampleFormControlInput1" placeholder="Digite El Precio Del Producto">
+          </div>
+          <div class="mb-3">
+              <select class="form-select" name="stock">
+                <option selected disabled>Stock</option>
+                <option value="si">Si</option>
+                <option value="no">No</option>
+              </select>
+          </div>
+          <div class="mb-3">
+              <label for="exampleFormControlInput1" class="form-label">Imagen Producto</label>
+              <input type="file" name="imagen" placeholder="imagen" class="form-control" id="exampleFormControlInput1">
+          </div>
+          <div class="mb-3">
+              <button type="submit" class="btn btn-primary">Registrar</button>
+              <a class="btn btn-secondary" href={% url 'index' %}>Volver</a>
+              <a href="{% url 'listar_productos' %}" class="btn btn-info">Ver Productos</a>
+          </div>
+        </form>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+</body>
+</html>
