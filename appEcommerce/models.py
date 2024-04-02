@@ -23,5 +23,5 @@ class ItemCarrito(models.Model):
         return self.producto.precio * self.cantidad
 
 class Carrito(models.Model):
-    usuario = models.ForeignKey(User, on_delete=models.CASCADE)
+    usuario = models.ForeignKey(User, on_delete=models.CASCADE,null=True, blank=True)
     items = models.ManyToManyField(ItemCarrito)

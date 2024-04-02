@@ -40,6 +40,10 @@ INSTALLED_APPS = [
     'appEcommerce'
 ]
 
+
+
+
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -71,6 +75,7 @@ TEMPLATES = [
 WSGI_APPLICATION = 'ecommerce.wsgi.application'
 
 
+
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
@@ -78,12 +83,19 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'tienda',
-        'USER':'admin',
+        'USER':'postgres',
         'PASSWORD':'1234',
         'HOST':'localhost',
         'PORT':'5432',
     }
 }
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'modasinfronteras2@gmail.com'  
+EMAIL_HOST_PASSWORD = 'tcrn iyyc ipjq zman'  
 
 
 # Password validation
@@ -129,3 +141,5 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 MEDIA_URL = '/media-files/'
 MEDIA_ROOT = BASE_DIR / "files"
+
+

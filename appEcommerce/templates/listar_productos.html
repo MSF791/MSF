@@ -30,8 +30,8 @@
                     <th>{{p.descripcion}}</th>
                     <th>{{p.stock}}</th>
                     <th><img src="{{p.imagen.url}}" alt="" height="50px" width="50px"></th>
-                    <th><a href="" class="btn btn-success">Editar</a></th>
-                    <th><a href="" class="btn btn-danger">Eliminar</a></th>
+                    <th><a href="{% url 'editar_producto' p.id %}" class="btn btn-success">Editar</a></th>
+                    <th><a href="{% url 'eliminar_producto' p.id %}" class="btn btn-danger">Eliminar</a></th>
                 </tr>
             </tbody>
             {% endfor %}

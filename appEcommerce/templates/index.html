@@ -80,7 +80,9 @@
 												</div>
 											</li>
 											<li><a href={% url 'contact' %}>contactanos</a></li>
-											<li><a href={% url 'productos' %}>Registrar Producto</a></li>
+											{% if user.is_authenticated and user.is_superuser %}
+												<li><a href="{% url 'productos' %}">Registrar Productos</a></li>
+											{% endif %}
 										</ul>
 									</nav>
 								</div>
@@ -90,34 +92,19 @@
 									<div class="total-cart">
 										<a href="{% url 'ver_carrito' %}">
 											<i class="fa fa-shopping-cart"></i>
-											<span>{{carro}}</span>
 										</a>
 									</div>
 									<ul>
-										{% for item in items %}
-											<li class="cart-border">
-												<div class="cart-img">
-													<a href="{% url 'details' item.producto.id %}"><img alt="" src="{{ item.producto.imagen.url }}"></a>
-												</div>
-												<div class="cart-info">
-													<h4><a href="{% url 'details' item.producto.id %}">{{ item.producto.nombre }}</a></h4>
-													<h6><a class="decorar">Precio: $ {{item.producto.precio}} x {{item.cantidad}}</a></h6>
-												</div>
-											</li>
-										{% endfor %}
-										<a href="{% url 'ver_carrito' %}">
-											<li class="cart-button">
-												Ver Carro
-											</li>
 										</a>
 									</ul>
 								</div>
 								<div class="user-meta">
 									<a href="#"><i class="fa fa-cog"></i></a>
 									<ul>
-										<li><a href="#">Mi Cuenta</a></li>
+										<li><a href="{% url 'editar_usuario' %}">Mi Cuenta</a></li>
 										<li><a href="{% url 'deseos' %}">Lista De Deseos</a></li>
-										<li><a href="{% url 'login' %}">Iniciar Sesion / Registro</a></li>
+										<li><a href="{% url 'login_view' %}">Iniciar Sesion / Registro</a></li>
+										<li><a href="{% url 'cerrar_sesion' %}">Cerrar Sesion</a></li>
 									</ul>
 								</div>
 							</div>
@@ -995,183 +982,7 @@
 		</div>
 		<!-- featured-area end -->
 		
-		<!-- category-area start -->
-		<div class="category-area category-area-3 pad-60">
-			<div class="container">
-				<div class="row">
-					<div class="col-md-4 col-sm-6">
-						<div class="single-cat">
-							<h2 class="cat-title">special</h2>
-							<div class="single-product">
-								<div class="product-img">
-									<a href="product-details.html">
-										<img src={% static 'img/product/5.jpg' %} alt="" />
-										<img class="secondary-img" src={% static 'img/product/6.jpg' %} alt="" />
-									</a>
-								</div>
-								<div class="product-content">
-									<h3><a href="product-details.html">Lorem ipsum dolor</a></h3>
-									<div class="price">
-										<span>$70.00</span>
-										<span class="old">$80.11</span>
-									</div>
-									<div class="product-action">
-										<div class="button-top">
-											<a href="#" data-toggle="modal" data-target="#productModal"><i class="fa fa-search"></i></a>
-											<a href="#"><i class="fa fa-heart"></i></a>
-										</div>
-										<div class="button-cart">
-											<button><i class="fa fa-shopping-cart"></i></button>
-										</div>
-									</div>
-								</div>
-							</div>
-							<div class="single-product cat-margin">
-								<div class="product-img">
-									<a href="product-details.html">
-										<img src={% static 'img/product/7.jpg' %} alt="" />
-										<img class="secondary-img" src="img/product/8.jpg" alt="" />
-									</a>
-								</div>
-								<div class="product-content">
-									<h3><a href="product-details.html">Lorem ipsum dolor</a></h3>
-									<div class="price">
-										<span>$70.00</span>
-										<span class="old">$80.11</span>
-									</div>
-									<div class="product-action">
-										<div class="button-top">
-											<a href="#" data-toggle="modal" data-target="#productModal"><i class="fa fa-search"></i></a>
-											<a href="#"><i class="fa fa-heart"></i></a>
-										</div>
-										<div class="button-cart">
-											<button><i class="fa fa-shopping-cart"></i></button>
-										</div>
-									</div>
-								</div>
-							</div>
-							<div class="cat-more">
-								<a href="shop.html">Ver más <i class="fa fa-angle-right"></i><i class="fa fa-angle-right"></i></a>
-							</div>
-						</div>
-					</div>
-					<div class="col-md-4 col-sm-6">
-						<div class="single-cat">
-							<h2 class="cat-title">must have</h2>
-							<div class="single-product">
-								<div class="product-img">
-									<a href="product-details.html">
-										<img src={% static 'img/product/w1.jpg' %} alt="" />
-										<img class="secondary-img" src="img/product/w9.jpg" alt="" />
-									</a>
-								</div>
-								<div class="product-content">
-									<h3><a href="product-details.html">Lorem ipsum dolor</a></h3>
-									<div class="price">
-										<span>$70.00</span>
-										<span class="old">$80.11</span>
-									</div>
-									<div class="product-action">
-										<div class="button-top">
-											<a href="#" data-toggle="modal" data-target="#productModal"><i class="fa fa-search"></i></a>
-											<a href="#"><i class="fa fa-heart"></i></a>
-										</div>
-										<div class="button-cart">
-											<button><i class="fa fa-shopping-cart"></i></button>
-										</div>
-									</div>
-								</div>
-							</div>
-							<div class="single-product cat-margin">
-								<div class="product-img">
-									<a href="product-details.html">
-										<img src={% static 'img/product/5.jpg' %} alt="" />
-										<img class="secondary-img" src="img/product/w5.jpg" alt="" />
-									</a>
-								</div>
-								<div class="product-content">
-									<h3><a href="product-details.html">Lorem ipsum dolor</a></h3>
-									<div class="price">
-										<span>$70.00</span>
-										<span class="old">$80.11</span>
-									</div>
-									<div class="product-action">
-										<div class="button-top">
-											<a href="#" data-toggle="modal" data-target="#productModal"><i class="fa fa-search"></i></a>
-											<a href="#"><i class="fa fa-heart"></i></a>
-										</div>
-										<div class="button-cart">
-											<button><i class="fa fa-shopping-cart"></i></button>
-										</div>
-									</div>
-								</div>
-							</div>
-							<div class="cat-more">
-								<a href="shop.html">Ver Más <i class="fa fa-angle-right"></i><i class="fa fa-angle-right"></i></a>
-							</div>
-						</div>
-					</div>
-					<div class="col-md-4 hidden-sm">
-						<div class="single-cat">
-							<h2 class="cat-title">new product</h2>
-							<div class="single-product">
-								<div class="product-img">
-									<a href="product-details.html">
-										<img src={% static 'img/product/5.jpg' %} alt="" />
-										<img class="secondary-img" src="img/product/11.jpg" alt="" />
-									</a>
-								</div>
-								<div class="product-content">
-									<h3><a href="product-details.html">Lorem ipsum dolor</a></h3>
-									<div class="price">
-										<span>$70.00</span>
-										<span class="old">$80.11</span>
-									</div>
-									<div class="product-action">
-										<div class="button-top">
-											<a href="#" data-toggle="modal" data-target="#productModal"><i class="fa fa-search"></i></a>
-											<a href="#"><i class="fa fa-heart"></i></a>
-										</div>
-										<div class="button-cart">
-											<button><i class="fa fa-shopping-cart"></i></button>
-										</div>
-									</div>
-								</div>
-							</div>
-							<div class="single-product cat-margin">
-								<div class="product-img">
-									<a href="product-details.html">
-										<img src={% static 'img/product/5.jpg' %} alt="" />
-										<img class="secondary-img" src="img/product/17.jpg" alt="" />
-									</a>
-								</div>
-								<div class="product-content">
-									<h3><a href="product-details.html">Lorem ipsum dolor</a></h3>
-									<div class="price">
-										<span>$70.00</span>
-										<span class="old">$80.11</span>
-									</div>
-									<div class="product-action">
-										<div class="button-top">
-											<a href="#" data-toggle="modal" data-target="#productModal"><i class="fa fa-search"></i></a>
-											<a href="#"><i class="fa fa-heart"></i></a>
-										</div>
-										<div class="button-cart">
-											<button><i class="fa fa-shopping-cart"></i></button>
-										</div>
-									</div>
-								</div>
-							</div>
-							<div class="cat-more">
-								<a href="shop.html">Ver Más <i class="fa fa-angle-right"></i><i class="fa fa-angle-right"></i></a>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-		<!-- category-area end -->
-
+		
 		<!-- footer start -->
 		<footer>
 			<div class="footer-top">

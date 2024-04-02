@@ -89,25 +89,9 @@
 									<div class="total-cart">
 										<a href="{% url 'ver_carrito' %}">
 											<i class="fa fa-shopping-cart"></i>
-											<span>{{carro}}</span>
 										</a>
 									</div>
 									<ul>
-										{% for item in items %}
-											<li class="cart-border">
-												<div class="cart-img">
-													<a href="{% url 'details' item.producto.id %}"><img alt="" src="{{ item.producto.imagen.url }}"></a>
-												</div>
-												<div class="cart-info">
-													<h4><a href="{% url 'details' item.producto.id %}">{{ item.producto.nombre }}</a></h4>
-													<h6><a class="decorar">Precio: $ {{item.producto.precio}} x {{item.cantidad}}</a></h6>
-												</div>
-											</li>
-										{% endfor %}
-										<a href="{% url 'ver_carrito' %}">
-											<li class="cart-button">
-												Ver Carro
-											</li>
 										</a>
 									</ul>
 								</div>
@@ -116,7 +100,8 @@
 									<ul>
 										<li><a href="#">Mi Cuenta</a></li>
 										<li><a href="{% url 'deseos' %}">Lista De Deseos</a></li>
-										<li><a href="{% url 'login' %}">Iniciar Sesion / Registro</a></li>
+										<li><a href="{% url 'login_view' %}">Iniciar Sesion / Registro</a></li>
+										<li><a href="{% url 'cerrar_sesion' %}">Cerrar Sesion</a></li>
 									</ul>
 								</div>
 							</div>

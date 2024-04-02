@@ -89,25 +89,9 @@
 									<div class="total-cart">
 										<a href="{% url 'ver_carrito' %}">
 											<i class="fa fa-shopping-cart"></i>
-											<span>{{carro}}</span>
 										</a>
 									</div>
 									<ul>
-										{% for item in items %}
-											<li class="cart-border">
-												<div class="cart-img">
-													<a href="{% url 'details' item.producto.id %}"><img alt="" src="{{ item.producto.imagen.url }}"></a>
-												</div>
-												<div class="cart-info">
-													<h4><a href="{% url 'details' item.producto.id %}">{{ item.producto.nombre }}</a></h4>
-													<h6><a class="decorar">Precio: $ {{item.producto.precio}} x {{item.cantidad}}</a></h6>
-												</div>
-											</li>
-										{% endfor %}
-										<a href="{% url 'ver_carrito' %}">
-											<li class="cart-button">
-												Ver Carro
-											</li>
 										</a>
 									</ul>
 								</div>
@@ -116,7 +100,8 @@
 									<ul>
 										<li><a href="#">Mi Cuenta</a></li>
 										<li><a href="{% url 'deseos' %}">Lista De Deseos</a></li>
-										<li><a href="{% url 'login' %}">Iniciar Sesion / Registro</a></li>
+										<li><a href="{% url 'login_view' %}">Iniciar Sesion / Registro</a></li>
+										<li><a href="{% url 'cerrar_sesion' %}">Cerrar Sesion</a></li>
 									</ul>
 								</div>
 							</div>
@@ -221,23 +206,47 @@
 		</div>
 		<!-- breadcrumb-area end -->
 		<!-- login-area start -->
+		{% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+            <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %} {% if message.tags == 'error' %}alert-danger{% endif %}" role="alert" id="miAlerta">
+                <strong>{{ message }}</strong>
+            </div>
+        {% endfor %}
+    </ul>
+    <!-- Script para cerrar automáticamente la alerta después de 5 segundos -->
+    <script>
+        // Selecciona la alerta por su ID
+        var miAlerta = document.getElementById('miAlerta');
+
+        // Cierra la alerta después de 5 segundos
+        setTimeout(function(){
+            miAlerta.classList.add('fade');
+            miAlerta.classList.remove('show');
+        }, 5000);
+    </script>
+{% endif %}
+		
 		<div class="login-area">
 			<div class="container">
 				<div class="row">
 					<div class="col-md-6">
 						<div class="login-content">
 							<h2 class="login-title">Iniciar Sesion</h2>
-							<form action="#" autocomplete="off">
-								<label>Correo Electronico</label>
-								<input type="text" />
-								<label>Contraseña</label>
-								<input type="password" />
+							<form method="post" action="{% url 'iniciar_sesion' %}">
+								{% csrf_token %}
+								<label for="id_correo">Nombre De Usuario</label>
+								<input type="text" name="usuario" id="id_correo" required/>
+		
+								<label for="id_password">Contraseña</label>
+								<input type="password" name="contrasena" id="id_password" required/>
+		
 								<div class="login-lost">
 									<span class="forgot-login">
-										<a href="#">Olvidaste La Contraseña?</a>
+										<a href="{% url 'password' %}">¿Olvidaste la Contraseña?</a>
 									</span>
 								</div>
-								<input class="login-sub" type="submit" value="Inicar Sesion" />
+								<input class="login-sub" type="submit" value="Iniciar Sesión" />
 							</form>
 						</div>
 					</div>
@@ -245,11 +254,9 @@
 						<div class="login-content login-margin">
 							<h2 class="login-title">¿No tienes Una Cuenta?</h2>
 							<p class="mensaje2">Crea Una Aqui.</p>
-							<form action="#">
-								<label>Correo Electronico</label>
-								<input type="text" />
-								<label>Contraseña</label>
-								<input type="password" />
+							<form method="post" action="{% url 'registrar_usuario' %}">
+								{% csrf_token %}
+                				{{ form.as_p }}
 								<input class="login-sub" type="submit" value="Registrarse" />
 							</form>
 							<div class="sign-up-today">

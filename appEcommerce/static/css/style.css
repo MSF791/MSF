@@ -1,4 +1,4 @@
-﻿/*-----------------------------------------------------------------------------------
+﻿﻿/*-----------------------------------------------------------------------------------
 
     Template Name: Pabna eCommerce Fashion Template
     Template URI: http://BasicTheme.com
@@ -93,35 +93,7 @@ padding: 0
     color: #000;
     padding: 0.2em 0;
 }
-.btn {
-	display: inline-block;
-	margin-bottom: 0;
-	font-weight: normal;
-	text-align: center;
-	vertical-align: middle;
-	-ms-touch-action: manipulation;
-	touch-action: manipulation;
-	cursor: pointer;
-	background-image: none;
-	border: 1px solid transparent;
-	white-space: nowrap;
-	padding: 16px 30px;
-	font-size: 14px;
-	line-height: 1;
-	border-radius: 0;
-	-webkit-user-select: none;
-	-moz-user-select: none;
-	-ms-user-select: none;
-	user-select: none;
-	background: #FE4847;
-	color: #fff;
-	text-transform: uppercase;
-	font-weight: 700;
-}
-.btn:hover{background: #fff;}
-/*-----2.6  tooltip-----*/
-.tooltip > .tooltip-inner {background-color: #FE4847;border-radius: 0px;padding: 6px 5px;}
-.tooltip-arrow,.tooltip.top .tooltip-arrow { border-top-color:#FE4847}
+
 /* -------------------------
 2. header-top
 ---------------------------- */
@@ -370,6 +342,7 @@ position: relative;}
   visibility: hidden;
   width: 150px;
   z-index: 99999;
+  
 }
 .user-meta ul li {
   border-bottom: 1px solid #e5e5e5;
@@ -423,30 +396,6 @@ position: relative;}
 }
 .total-cart {
   padding-bottom: 20px;
-}
-.my-cart ul {
-	background: #fff none repeat scroll 0 0;
-	padding: 25px 15px;
-	position: absolute;
-	right: 0;
-	top: 120%;
-	transform-origin: center top 0;
-	transition: all 0.5s ease 0s;
-	width: 276px;
-	z-index: 9999;
-	opacity: 0;
-	visibility: hidden;
-}
-.my-cart:hover ul{opacity:1;top:100%;visibility:visible}
-.my-cart ul li {
-  margin-bottom: 10px;
-  overflow: hidden;
-}
-.my-cart ul li:last-child{margin-bottom:0}
-.cart-img {
-  float: left;
-  position: relative;
-  width: 50px;
 }
 .cart-info {
   float: left;
@@ -1472,10 +1421,12 @@ span.sorting-name {
   float: left;
   text-align: right;
   width: 25%;
+  vertical-align: middle !important;
 }
 .shop-breadcrumb ul{}
 .shop-breadcrumb ul li {
   display: inline-block;
+  vertical-align: middle !important;
 }
 .shop-breadcrumb ul li a {
 	border: 1px solid #ddd;
@@ -1491,7 +1442,13 @@ span.sorting-name {
   float: left;
   text-align: center;
   width: 25%;
+  vertical-align: middle !important;
 }
+.shop-breadcrumb ul li a i {
+  vertical-align: middle !important;
+  margin-top: 10px;
+}
+
 .short-by select option {
   text-transform: capitalize;
 }
@@ -2428,11 +2385,12 @@ a.shipping-calculator-button:hover {
   margin-bottom: 20px;
   padding-left: 10px;
   width: 100%;
+  color: #000;
 }
 .login-content form input.login-sub {
   background: #444 none repeat scroll 0 0;
   border: 0 none;
-  color: #fff;
+  color: #ffffff;
   font-weight: 700;
   margin-bottom: 0;
   margin-top: 5px;
@@ -3157,4 +3115,56 @@ width: 100%;}
   color: #000;
   font-size: 14px;
   text-decoration: none;
+}
+#cart-icon {
+  color: black; /* Color negro para el icono */
+  transition: transform 0.3s ease; /* Transición suave */
+}
+#cart-icon-2 {
+  color: black; /* Color negro para el icono */
+  transition: transform 0.3s ease; /* Transición suave */
+}
+
+#cart-btn.active #cart-icon {
+  color: rgb(0, 0, 0); /* Color verde cuando el botón está activo */
+}
+#cart-btn-2.active #cart-icon-2 {
+  color: rgb(0, 0, 0); /* Color verde cuando el botón está activo */
+}
+
+#cart-btn.active {
+  transform: translateX(25px); /* Desplazamiento a la derecha cuando el botón está activo */
+}
+#cart-btn-2.active {
+  transform: translateX(25px); /* Desplazamiento a la derecha cuando el botón está activo */
+}
+.btn-primary {
+  background-color: #007bff; /* Color azul de Bootstrap */
+  color: #fff; /* Color de texto blanco */
+}
+#cart-btn {
+  transition: 1s ease-in-out;
+  outline: none;
+}
+#cart-btn-2 {
+  transition: 1s ease-in-out;
+  outline: none;
+  margin-left: 25px;
+}
+.card{
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  width: 260px;
+  height: 400px;
+  background-color: transparent;
+  color: white;
+  border-radius: 15px;
+  z-index: 100;
+  margin-bottom: 60px;
+}
+.card-title,
+.card-subtitle,
+.card-text {
+  text-align: center;
 }

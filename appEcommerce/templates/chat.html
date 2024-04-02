@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat con Django y JavaScript</title>
+</head>
+<body>
+    <div id="chat-container">
+        <div id="chat-messages"></div>
+        <input type="text" id="mensaje-input" placeholder="Escribe tu mensaje...">
+        <button onclick="enviarMensaje()">Enviar</button>
+    </div>
+
+    <script>
+        const chatMessages = document.getElementById('chat-messages');
+        const mensajeInput = document.getElementById('mensaje-input');
+
+        function enviarMensaje() {
+            const mensaje = mensajeInput.value;
+            mostrarMensaje(`Tú: ${mensaje}`);
+            mensajeInput.value = '';
+
+            // Enviar mensaje al servidor usando AJAX (puedes ajustar la URL según tu configuración)
+            const xhr = new XMLHttpRequest();
+            xhr.open('POST', '/enviar_mensaje/');
+            xhr.setRequestHeader('Content-Type', 'application/json');
+
+            xhr.onload = function () {
+                if (xhr.status === 200) {
+                    const respuesta = JSON.parse(xhr.responseText);
+                }
+            };
+
+            xhr.send(JSON.stringify({ mensaje: mensaje }));
+        }
+
+        function mostrarMensaje(mensaje) {
+            const nuevoMensaje = document.createElement('div');
+            nuevoMensaje.innerText = mensaje;
+            chatMessages.appendChild(nuevoMensaje);
+        }
+    </script>
+</body>
+</html>
