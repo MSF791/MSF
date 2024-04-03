@@ -29,7 +29,7 @@ SECRET_KEY = 'django-insecure-o+@$c0e=5-3g0*_l@8b9#l4hdcu*6xksuj^b#febnnhu#40(x3
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -92,7 +92,9 @@ WSGI_APPLICATION = 'ecommerce.wsgi.application'
 # }
 
 DATABASES = {
-    'default': dj_database_url.parse(os.environ.get('DATABASE_URL'))
+    'default': dj_database_url.config(
+        default='postgres://dev_msf_rac4_user:5P62Mcp3vhLx1qoyWSPXBUHuwA2FSIc8@dpg-co6b3ngl6cac73a6fndg-a.oregon-postgres.render.com/dev_msf_rac4'
+    )
 }
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
