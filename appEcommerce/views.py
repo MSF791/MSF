@@ -8,6 +8,8 @@ from django.contrib.auth.tokens import default_token_generator
 from django.urls import reverse
 from django.core.mail import send_mail
 from django.http import HttpResponseRedirect
+from rest_framework.parsers import JSONParser
+from .serializers import MessageSerializer
 from django.core.paginator import Paginator
 import logging
 
@@ -47,9 +49,6 @@ def enviar_mensaje(request):
         return JsonResponse(respuesta)
 
     return JsonResponse({'error': 'Método no permitido'}, status=405)
-
-def chat(request):
-    return render(request, 'chat.html')
 
 def agregar_a_deseos(request, id):
     producto = get_object_or_404(Producto, id=id)
@@ -350,4 +349,43 @@ def reset_password(request, token, email):
         form = ResetPasswordForm()
 
     return render(request, 'reset_password.html', {'form': form})
+
+def chat_view(request):
+    if not request.user.is_authenticated:
+        return redirect('login_view')
+    if request.method == "GET":
+        return render(request, 'chat.html',
+                      {'users': User.objects.exclude(username=request.user.username)})
+    
+def message_view(request, sender, receiver):
+    if not request.user.is_authenticated:
+        return redirect('login_view')
+    if request.method == "GET":
+        return render(request, "messages.html",
+                      {'users': User.objects.exclude(username=request.user.username),
+                       'receiver': User.objects.get(id=receiver),
+                       'messages': Message.objects.filter(sender_id=sender, receiver_id=receiver) |
+                                   Message.objects.filter(sender_id=receiver, receiver_id=sender)})
+    
+@csrf_exempt
+def message_list(request, sender=None, receiver=None):
+    """
+    List all required messages, or create a new message.
+    """
+    if request.method == 'GET':
+        messages = Message.objects.filter(sender_id=sender, receiver_id=receiver, is_read=False)
+        serializer = MessageSerializer(messages, many=True, context={'request': request})
+        for message in messages:
+            message.is_read = True
+            message.save()
+        return JsonResponse(serializer.data, safe=False)
+
+    elif request.method == 'POST':
+        data = JSONParser().parse(request)
+        serializer = MessageSerializer(data=data)
+        if serializer.is_valid():
+            serializer.save()
+            return JsonResponse(serializer.data, status=201)
+        return JsonResponse(serializer.errors, status=400)
+
 

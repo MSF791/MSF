@@ -27,7 +27,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-o+@$c0e=5-3g0*_l@8b9#l4hdcu*6xksuj^b#febnnhu#40(x3'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ["*"]
 
@@ -41,7 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'appEcommerce'
+    'appEcommerce',
 ]
 
 
@@ -81,22 +81,22 @@ WSGI_APPLICATION = 'ecommerce.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': 'tienda',
-#         'USER':'postgres',
-#         'PASSWORD':'1234',
-#         'HOST':'localhost',
-#         'PORT':'5432',
-#     }
-# }
-
 DATABASES = {
-    'default': dj_database_url.config(
-        default='postgres://dev_msf_rac4_user:5P62Mcp3vhLx1qoyWSPXBUHuwA2FSIc8@dpg-co6b3ngl6cac73a6fndg-a.oregon-postgres.render.com/dev_msf_rac4'
-    )
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'tienda',
+        'USER':'admin',
+        'PASSWORD':'1234',
+        'HOST':'localhost',
+        'PORT':'5432',
+    }
 }
+
+# DATABASES = {
+#     'default': dj_database_url.config(
+#         default='postgres://dev_msf_rac4_user:5P62Mcp3vhLx1qoyWSPXBUHuwA2FSIc8@dpg-co6b3ngl6cac73a6fndg-a.oregon-postgres.render.com/dev_msf_rac4'
+#     )
+# }
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'

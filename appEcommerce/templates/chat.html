@@ -1,45 +1,84 @@
+{% load static %}
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chat con Django y JavaScript</title>
+    <title>Document</title>
+    <link type="text/css" rel="stylesheet" href="{% static 'css/style_chat.css' %}"  media="screen,projection"/>
+    <link type="text/css" rel="stylesheet" href="{% static 'css/materialize.min.css' %}"  media="screen,projection"/>
 </head>
 <body>
-    <div id="chat-container">
-        <div id="chat-messages"></div>
-        <input type="text" id="mensaje-input" placeholder="Escribe tu mensaje...">
-        <button onclick="enviarMensaje()">Enviar</button>
-    </div>
-
-    <script>
-        const chatMessages = document.getElementById('chat-messages');
-        const mensajeInput = document.getElementById('mensaje-input');
-
-        function enviarMensaje() {
-            const mensaje = mensajeInput.value;
-            mostrarMensaje(`Tú: ${mensaje}`);
-            mensajeInput.value = '';
-
-            // Enviar mensaje al servidor usando AJAX (puedes ajustar la URL según tu configuración)
-            const xhr = new XMLHttpRequest();
-            xhr.open('POST', '/enviar_mensaje/');
-            xhr.setRequestHeader('Content-Type', 'application/json');
-
-            xhr.onload = function () {
-                if (xhr.status === 200) {
-                    const respuesta = JSON.parse(xhr.responseText);
-                }
-            };
-
-            xhr.send(JSON.stringify({ mensaje: mensaje }));
-        }
-
-        function mostrarMensaje(mensaje) {
-            const nuevoMensaje = document.createElement('div');
-            nuevoMensaje.innerText = mensaje;
-            chatMessages.appendChild(nuevoMensaje);
-        }
-    </script>
+    <nav class="blue lighten-3">
+        <div class="nav-wrapper container">
+          <a href="#" class="brand-logo">Chat</a>
+          <ul id="nav-mobile" class="right hide-on-med-and-down">
+              <li><a href="">{{ request.user.username }}</a></li>
+              <li><a href="{% url 'cerrar_sesion' %}"><i class="material-icons">Cerrar Sesion</i></a></li>
+          </ul>
+        </div>
+    </nav>
+        <div class="section" style="height: 80vh">
+        <div class="row">
+            <div class="col s3">
+            <div class="card">
+                <div class="collection">
+                    {% if user %}
+                    {% for user in users %}
+                    <a href="{% url 'chat' request.user.id user.id %}" id="user{{ user.id }}" class="collection-item row">
+                        <img src="https://www.configuroweb.com/wp-content/uploads/2016/12/feed.jpg" class="col s4">
+                        <div class="col s8">
+                        <span class="title" style="font-weight: bolder">{{ user.username }}</span>
+                        </div>
+                    </a>
+                    {% endfor %}
+                    {% else %}
+                    <h1>No hay conversaciones</h1>
+                    {% endif %}
+                </div>
+            </div>
+            </div>
+            <div class="col s9">
+                <div class="card">
+                <div id="board" class="section grey lighten-3" style="height: 68vh; padding: 5px; overflow-y: scroll">
+                    {% block messages %}
+    
+                    {% endblock %}
+                </div>
+                <form id="chat-box" class="form-group {% block hide %}hide{% endblock %}" method="post">
+                    {% csrf_token %}
+                    <div class="row">
+                        <div class="col s11">
+                            <div class="input-field">
+                                <input id="id_message" name="message" type="text" placeholder="Ingresa tu mensaje..">
+                            </div>
+                        </div>
+                        <div class="col s1" >
+                            <button class="btn btn-primary">send</button>
+                        </div>
+                    </div>
+                </form>
+                </div>
+            </div>
+        </div>
+        </div>
+        {% load static %}
+        <script src="{% static 'js/chat.js' %}"></script>
+        <script>
+            // For receiving
+            sender_id = "{{ receiver.id }}";
+            receiver_id = "{{ request.user.id }}";
+    
+            //For sending
+            $(function () {
+                scrolltoend();
+                $('#chat-box').on('submit', function (event) {
+                    event.preventDefault();
+                    var message = $('#id_message');
+                    send('{{ request.user.username }}', '{{ receiver.username }}', message.val());
+                    message.val('');
+                })
+            })
+        </script>
 </body>
 </html>
