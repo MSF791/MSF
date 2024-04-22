@@ -1,0 +1,258 @@
+body{
+    background-color: rgb(29,29,29);
+    font-family:Arial,Helvetica,sans-serif;
+}
+::selection {
+    background-color: rgb(254, 72, 71); /* Cambia el color de fondo del texto seleccionado */
+    color: #ffffff; /* Cambia el color del texto seleccionado */
+}
+
+::-moz-selection {
+    background-color: rgb(254, 72, 71); /* Cambia el color de fondo del texto seleccionado en Firefox */
+    color: #ffffff; /* Cambia el color del texto seleccionado en Firefox */
+}
+nav{
+    display: flex;
+    align-items: center;
+    background-color: rgb(58, 58, 58);
+    width: 100%;
+    height: 60px;
+    margin-bottom: 15px;
+}
+.icono{
+    margin-right: 700px;
+    margin-left: 100px;
+}
+.botones{
+    display: flex;
+    justify-content: space-between;
+    width: 300px;
+}
+.volver{
+    display: flex;
+    align-items: center;
+    transition: .3s ease-in-out;
+}
+.volver:hover{
+    color: rgb(254, 72, 71);
+}
+.bi{
+    margin-right: 5px;
+}
+.enLinea{
+    width: 10px;
+    height: 10px;
+    background-color: rgb(62, 247, 6);
+    border: solid 2px rgb(255, 255, 255);
+    border-radius: 100%;
+    margin-right: 5px;
+}
+.botones a{
+    text-decoration: none;
+    color: rgb(255, 255, 255);
+}
+.row{
+    display: flex;
+    align-items: center;
+}
+.divContent{
+    border-top: solid 6px rgb(254, 72, 71);
+}
+.esin{
+    position: relative;
+    z-index: 2;
+    margin:10px 3px;
+}
+.chats{
+    width: 40%;
+    height: 540px;
+    margin-right: 15px;
+    border: solid 1px white;
+    border-radius: 10px;
+}
+.buscarChats{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    margin-top: 20px;
+}
+.buscarChats input{
+    width: 250px;
+    height: 25px;
+    background-color: rgb(29,29,29);
+    font-size: 20px;
+    padding: 5px 15px;
+    border-radius: 8px 0px 0px 8px;
+    border: solid 1px rgb(255, 255, 255);
+    color: rgb(255, 255, 255);
+}
+.buscarChats button{
+    width: 50px;
+    height: 37px;
+    padding: 5px;
+    background-color: rgb(29,29,29);
+    color: rgb(255, 255, 255);
+    border: solid 1px rgb(255, 255, 255);
+    border-radius: 0px 8px 8px 0px;
+}
+.chat{
+    position: relative;
+    z-index: 2;
+    width: 100%;
+}
+.cardC{
+    position: relative;
+    z-index: 2;
+}
+.fondoImg{
+    position: absolute;
+    z-index: 1;
+    background-image: url(../img/bolso.png);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 300px;
+    opacity: 0.5;
+    width: 100%;
+    height: 100%;
+    top: 0; 
+    left: 0;
+}
+
+.inputM{
+    width: 80%;
+    margin-right: 75px;
+}
+.inputM input{
+    width: 100%;
+    background-color: rgba(29,29,29,.8);
+    color: rgb(255, 255, 255);
+    font-size: 20px;
+    border: solid 1px rgb(255, 255, 255);
+    border-radius: 10px;
+    padding: 5px 30px;
+    transition: .3s ease-in-out;
+    
+}
+.inputM input::placeholder {
+    color: rgb(170, 170, 170);
+}
+.inputM input:hover{
+    background-color: rgb(17, 17, 17);
+    outline: 2px solid rgb(254, 72, 71);
+}
+.inputM input:focus{
+    outline: 2px solid rgb(254, 72, 71);
+}
+.ingresarM{
+    display: flex;
+    align-items: center;
+    background-color: rgb(254, 72, 71);
+    color: rgb(255, 255, 255);
+    border: solid 3px rgb(254, 72, 71);
+    border-radius: 10px;
+    font-size: 20px;
+    padding: 5px 30px;
+    transition: .3s ease-in-out;
+}
+.ingresarM:hover{
+    background-color: transparent;
+    border: solid 3px rgb(254, 72, 71);
+    color: rgb(254, 72, 71);
+}
+
+.collectionChats {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    margin-top: 10px;
+}
+
+.collectionChats a:hover {
+    background-color: rgba(58, 58, 58, .5);
+}
+
+.collectionChats a {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: rgb(255, 255, 255);
+    transition: .5s ease-in-out;
+}
+
+.collectionChats a.active-chat {
+    background-color: rgba(58, 58, 58, .5);  /* Color de fondo para el chat activo */
+}
+
+.collectionChats img {
+    width: 20%;
+    margin: 10px;
+    margin-left: 15px;
+    margin-right: 40px;
+    border-radius: 50%;
+}
+.titleChat{
+    display: flex;
+    align-items: center;
+}
+.mensajeInicial{
+    width: 400px;
+    display: block; /* Asegúrate de que la imagen sea un bloque para aplicar margen */
+    margin: 0 auto;
+    margin-top: 20px;
+    align-items: center;
+    background-color: rgb(58, 58, 58);
+    border: solid 2px rgb(255, 255, 255);
+    border-radius: 20px;
+    text-align: center;
+    color: rgb(255, 255, 255);
+}
+.scrollChs{
+    margin-right: 10px;
+    height: 450px; 
+    padding: 5px; 
+    overflow-y: scroll
+}
+.scrollChs::-webkit-scrollbar-track{
+    background-color: rgb(255, 255, 255);
+}
+.scrollChs::-webkit-scrollbar-thumb {
+    background-color: rgb(29,29,29); /* color del thumb */
+    border: solid 1px rgb(255, 255, 255);
+    border-radius: 6px; /* redondeado del thumb */
+}
+.message-container {
+    display: flex;
+    flex-direction: column;
+}
+
+.message {
+    margin-bottom: 10px;
+    padding: 10px;
+    border-radius: 5px;
+    width: 80%;
+    text-align: center;
+    opacity: .7;
+    font-size: 18px;
+}
+.left {
+    background-color: #e0e0e0;
+    align-self: flex-start;
+    transition: .2s ease-in-out;
+}
+
+.left:hover{
+    background-color: #b9b9b9;
+}
+
+.right {
+    background-color:  rgb(254, 72, 71);
+    color: white;
+    align-self: flex-end;
+    transition: .2s ease-in-out;
+}
+.right:hover{
+    background-color:  rgb(251, 6, 6);
+}
+
+

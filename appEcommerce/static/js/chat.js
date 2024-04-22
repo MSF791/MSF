@@ -10,13 +10,31 @@ function scrolltoend() {
 }
 
 function send(sender, receiver, message) {
-    $.post('/api/messages/', '{"sender": "'+ sender +'", "receiver": "'+ receiver +'","message": "'+ message +'" }', function (data) {
-        console.log(data);
-        var box = text_box.replace('{sender}', "You");
-        box = box.replace('{message}', message);
-        $('#board').append(box);
-        scrolltoend();
-    })
+    var data = {
+        'sender': sender,
+        'receiver': receiver,
+        'message': message
+    };
+
+    console.log('Sender:', sender);
+    console.log('Receiver:', receiver);
+
+    $.ajax({
+        url: '/api/messages/',
+        type: 'POST',
+        data: JSON.stringify(data),
+        contentType: 'application/json',
+        success: function(data) {
+            console.log(data);
+            var box = text_box.replace('{sender}', "You");
+            box = box.replace('{message}', message);
+            $('#board').append(box);
+            scrolltoend();
+        },
+        error: function(error) {
+            console.error('Error sending message:', error);
+        }
+    });
 }
 
 function receive() {

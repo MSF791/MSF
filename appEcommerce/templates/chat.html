@@ -1,84 +1,120 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link type="text/css" rel="stylesheet" href="{% static 'css/style_chat.css' %}"  media="screen,projection"/>
-    <link type="text/css" rel="stylesheet" href="{% static 'css/materialize.min.css' %}"  media="screen,projection"/>
+    <title>Chat || Pabna</title>
+    <link rel="shortcut icon" type="image/x-icon" href={% static 'img/favicon.ico' %}>
+    <link type="text/css" rel="stylesheet" href="{% static 'css/chat.css' %}"/>
+    
 </head>
 <body>
-    <nav class="blue lighten-3">
-        <div class="nav-wrapper container">
-          <a href="#" class="brand-logo">Chat</a>
-          <ul id="nav-mobile" class="right hide-on-med-and-down">
-              <li><a href="">{{ request.user.username }}</a></li>
-              <li><a href="{% url 'cerrar_sesion' %}"><i class="material-icons">Cerrar Sesion</i></a></li>
-          </ul>
+    <nav>
+        <div class="icono">
+            <a href="#" class="brand-logo"><img src={% static 'img/logo-white-text.png' %} alt="" /></a>
+        </div>
+        <a href="En linea" class="enLinea"></a>
+        <div class="botones">
+            <a href="">{{ request.user.username }} (Tú)</a>
+            <a class="volver" href="{% url 'contact' %}"> 
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-escape" viewBox="0 0 16 16">
+                    <path d="M8.538 1.02a.5.5 0 1 0-.076.998 6 6 0 1 1-6.445 6.444.5.5 0 0 0-.997.076A7 7 0 1 0 8.538 1.02"/>
+                    <path d="M7.096 7.828a.5.5 0 0 0 .707-.707L2.707 2.025h2.768a.5.5 0 1 0 0-1H1.5a.5.5 0 0 0-.5.5V5.5a.5.5 0 0 0 1 0V2.732z"/>
+                </svg>
+                Volver
+            </a>
         </div>
     </nav>
         <div class="section" style="height: 80vh">
-        <div class="row">
-            <div class="col s3">
-            <div class="card">
-                <div class="collection">
-                    {% if user %}
-                    {% for user in users %}
-                    <a href="{% url 'chat' request.user.id user.id %}" id="user{{ user.id }}" class="collection-item row">
-                        <img src="https://www.configuroweb.com/wp-content/uploads/2016/12/feed.jpg" class="col s4">
-                        <div class="col s8">
-                        <span class="title" style="font-weight: bolder">{{ user.username }}</span>
-                        </div>
-                    </a>
-                    {% endfor %}
-                    {% else %}
-                    <h1>No hay conversaciones</h1>
-                    {% endif %}
-                </div>
-            </div>
-            </div>
-            <div class="col s9">
-                <div class="card">
-                <div id="board" class="section grey lighten-3" style="height: 68vh; padding: 5px; overflow-y: scroll">
-                    {% block messages %}
-    
-                    {% endblock %}
-                </div>
-                <form id="chat-box" class="form-group {% block hide %}hide{% endblock %}" method="post">
-                    {% csrf_token %}
-                    <div class="row">
-                        <div class="col s11">
-                            <div class="input-field">
-                                <input id="id_message" name="message" type="text" placeholder="Ingresa tu mensaje..">
-                            </div>
-                        </div>
-                        <div class="col s1" >
-                            <button class="btn btn-primary">send</button>
+            <div class="row divContent">
+                <div class="chats">
+                    <div class="buscarChats">
+                        <form method="GET">
+                            <input type="text" name="q" placeholder="Buscar chats" value="{% if query %}{{ query }}{% endif %}">
+                            <button type="submit">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+                                    <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
+                                </svg>
+                            </button>
+                        </form>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="collectionChats">
+                            {% if users %}
+                            {% for user in users %}
+                            <a href="{% url 'chat' request.user.id user.id %}" id="user{{ user.id }}">
+                                <img src="https://media.istockphoto.com/id/1130884625/es/vector/icono-de-vector-de-miembro-de-usuario-para-interfaz-de-usuario-ui-o-perfil-cara-aplicaci%C3%B3n.jpg?b=1&s=612x612&w=0&k=20&c=v3r_gH3_ndsI50TrOgOMw1DkBNy2SCcL7XKYG8bn_C8=">
+                                <div class="titleChat">
+                                    <div class="enLinea"></div>
+                                    <span class="title" style="font-weight: bolder">{{ user.username }}</span>
+                                </div>
+                            </a>
+                            {% endfor %}
+                            {% else %}
+                            <h1>No hay conversaciones</h1>
+                            {% endif %}
                         </div>
                     </div>
-                </form>
+                </div>
+                <div class="chat">
+                    <div class="fondoImg"></div>
+                    <div class="cardC">
+                        <div id="board" class="scroll" style="height: 475px; padding: 5px; overflow-y: scroll">
+                            <div class="message-container">
+                                {% for message in messages %}
+                                    <div class="message {% if message.sender_id == sender %}right{% else %}left{% endif %}">
+                                        <h6>{{ message.sender }}</h6>
+                                        <p>{{ message.message }}</p>
+                                        <h6>{{ message.timestamp|time:"H:i" }}</h6>
+                                    </div>
+                                {% empty %}
+                                    <div class="mensajeInicial">
+                                        <p>Bienvenid@ a nuestro chat en línea, envíanos un mensaje y te responderemos enseguida.😀↓</p>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                    <form id="chat-box" class="form-group" method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="sender" value="{{ request.user.id }}">
+                        <input type="hidden" name="receiver" value="{{ receiver.id }}">
+                        <div class="row esin">
+                            <div class="inputM">
+                                <input id="id_message" name="message" type="text" placeholder="Ingresa tu mensaje..">
+                            </div>
+                            <button type="submit" class="ingresarM">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-arrow-right" viewBox="0 0 16 16">
+                                    <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </form>                    
+                    
                 </div>
             </div>
         </div>
-        </div>
-        {% load static %}
-        <script src="{% static 'js/chat.js' %}"></script>
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script>
-            // For receiving
-            sender_id = "{{ receiver.id }}";
-            receiver_id = "{{ request.user.id }}";
-    
-            //For sending
-            $(function () {
-                scrolltoend();
-                $('#chat-box').on('submit', function (event) {
-                    event.preventDefault();
-                    var message = $('#id_message');
-                    send('{{ request.user.username }}', '{{ receiver.username }}', message.val());
-                    message.val('');
-                })
-            })
+            $(document).ready(function(){
+                // Función para desplazar el scroll al final del contenedor de mensajes
+                function scrollToBottom() {
+                    var div = document.getElementById("board");
+                    div.scrollTop = div.scrollHeight - div.clientHeight;
+                }
+        
+                // Llamar a la función al cargar la página
+                scrollToBottom();
+        
+                // Llamar a la función después de enviar un mensaje
+                $("#chat-box").submit(function() {
+                    scrollToBottom();
+                });
+            });
         </script>
+        
+        
 </body>
 </html>

@@ -1,8 +1,8 @@
 #django
 from django import forms
 
-#predio
-from .models import Producto
+#modelos
+from .models import *
 
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
@@ -66,3 +66,11 @@ class ResetPasswordForm(forms.Form):
             self.add_error('password', e)
 
         return cleaned_data
+    
+from django import forms
+
+class MessageForm(forms.ModelForm):
+    class Meta:
+        model = Message
+        fields = ['sender', 'receiver', 'message']
+

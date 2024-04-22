@@ -12,7 +12,7 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 
 from pathlib import Path
 
-import dj_database_url
+# import dj_database_url
 
 import os
 
@@ -85,7 +85,7 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'tienda',
-        'USER':'admin',
+        'USER':'postgres',
         'PASSWORD':'1234',
         'HOST':'localhost',
         'PORT':'5432',

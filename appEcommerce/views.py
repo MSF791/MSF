@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.http import JsonResponse
+from django.http import JsonResponse,HttpResponseNotFound,HttpResponseBadRequest
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -11,6 +11,7 @@ from django.http import HttpResponseRedirect
 from rest_framework.parsers import JSONParser
 from .serializers import MessageSerializer
 from django.core.paginator import Paginator
+from django.db.models import Q
 import logging
 
 
@@ -353,39 +354,57 @@ def reset_password(request, token, email):
 def chat_view(request):
     if not request.user.is_authenticated:
         return redirect('login_view')
-    if request.method == "GET":
-        return render(request, 'chat.html',
-                      {'users': User.objects.exclude(username=request.user.username)})
-    
-def message_view(request, sender, receiver):
-    if not request.user.is_authenticated:
-        return redirect('login_view')
-    if request.method == "GET":
-        return render(request, "messages.html",
-                      {'users': User.objects.exclude(username=request.user.username),
-                       'receiver': User.objects.get(id=receiver),
-                       'messages': Message.objects.filter(sender_id=sender, receiver_id=receiver) |
-                                   Message.objects.filter(sender_id=receiver, receiver_id=sender)})
+
+    query = request.GET.get('q')
+
+    if query:
+        users = User.objects.filter(username__icontains=query)
+    else:
+        users = User.objects.all()
+
+    return render(request, 'chat.html', {'users': users, 'query': query})
+
     
 @csrf_exempt
-def message_list(request, sender=None, receiver=None):
-    """
-    List all required messages, or create a new message.
-    """
+def message_view(request, sender=None, receiver=None):
+    if not request.user.is_authenticated:
+        return redirect('login_view')
+    
+    print('este debe ser el que recibe el mensaje',receiver)
+
     if request.method == 'GET':
-        messages = Message.objects.filter(sender_id=sender, receiver_id=receiver, is_read=False)
-        serializer = MessageSerializer(messages, many=True, context={'request': request})
-        for message in messages:
-            message.is_read = True
-            message.save()
-        return JsonResponse(serializer.data, safe=False)
+        messages = Message.objects.filter(
+            Q(sender_id=sender, receiver_id=receiver) | Q(sender_id=receiver, receiver_id=sender),
+            is_read=False
+        )
+
+        return render(request, 'chat.html', {'messages': messages, 'sender': sender, 'receiver': receiver, 'users': User.objects.exclude(username=request.user.username)})
+
 
     elif request.method == 'POST':
-        data = JSONParser().parse(request)
-        serializer = MessageSerializer(data=data)
-        if serializer.is_valid():
-            serializer.save()
-            return JsonResponse(serializer.data, status=201)
-        return JsonResponse(serializer.errors, status=400)
+        # Establecer el valor de receiver antes de validar el formulario
+        request.POST._mutable = True
+        request.POST['receiver'] = receiver
+        request.POST._mutable = False
 
+        form = MessageForm(request.POST)
+        if form.is_valid():
+            # Guardar el mensaje si el formulario es válido
+            form.save()
+            messages = Message.objects.filter(
+            Q(sender_id=sender, receiver_id=receiver) | Q(sender_id=receiver, receiver_id=sender),
+            is_read=False
+            )
+            messages.success(request, 'Nuevo mensaje recibido!')
+           # Redirige a la misma vista (GET) para evitar reenvío del formulario POST
+            return redirect('chat', sender=sender, receiver=receiver)
+        else:
+            # Imprimir errores del formulario
+            print(form.errors)
+            print(request.POST)  # Imprimir los datos POST recibidos para depuración
+                
+        return render(request, 'chat.html', {'sender': sender, 'receiver': receiver, 'users': User.objects.exclude(username=request.user.username)})
+
+def chat_style(request):
+    return render(request,'chat_estilo.html')
 
