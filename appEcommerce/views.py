@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.http import JsonResponse
+from django.http import JsonResponse,HttpResponseNotFound,HttpResponseBadRequest
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -7,11 +7,15 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.tokens import default_token_generator
 from django.urls import reverse
 from django.core.mail import send_mail
+from django.template.defaultfilters import floatformat
 from django.http import HttpResponseRedirect
 from rest_framework.parsers import JSONParser
 from .serializers import MessageSerializer
 from django.core.paginator import Paginator
+from django.db.models import Q
 import logging
+import mercadopago
+from django.db.models import Count
 
 
 from .forms import *
@@ -29,7 +33,13 @@ from django.views.decorators.csrf import csrf_exempt
 logger = logging.getLogger(__name__)
 
 def index(request):
-    return render(request, 'index.html')
+    producto = Producto.objects.order_by('id').all()
+
+     # Formatear el precio de cada producto
+    for p in producto:
+        p.precio = "{:,.0f}".format(p.precio)
+
+    return render(request, 'index.html', {'productos':producto})
 
 def verificar_autenticacion(request):
     if request.user.is_authenticated:
@@ -88,8 +98,10 @@ def login_view(request):
 
     return render(request, 'login.html', {'form': form})
 
-@login_required(login_url='login_view')
 def details(request, producto_id):
+    if not request.user.is_authenticated:
+        messages.warning(request, "Debes iniciar sesión para acceder a este módulo.")
+        return redirect('login_view')
     producto = get_object_or_404(Producto, id=producto_id)
     carrito, creado = Carrito.objects.get_or_create(usuario=request.user)
     items = carrito.items.all()
@@ -98,24 +110,134 @@ def details(request, producto_id):
     return render(request, 'product-details.html', {'producto': producto, "items":items, "total":total, "carro":cantidad_objetos})
 
 def shop(request):
-    producto = Producto.objects.all()
+    iva_tasa = 0.19  # 19% IVA
+    categoria_id = request.GET.get('categoria') 
+    talla = request.GET.get('talla')
+    color = request.GET.get('color')
+    min_price = request.GET.get('min_price')
+    max_price = request.GET.get('max_price')
+
+    if categoria_id:
+        # Filtrar productos que contienen la categoría seleccionada
+        producto = Producto.objects.filter(categoria=categoria_id).distinct()
+    else:
+        producto = Producto.objects.order_by('id').all()
+
+    # Filtrar productos por talla si se proporciona un valor de talla
+    if talla:
+        producto = producto.filter(talla=talla).distinct()
+
+    # Filtrar productos por color si se proporciona un valor de color
+    if color:
+        producto = producto.filter(color=color).distinct()
+    
+    # Filtrar productos por precio si se proporcionan valores de precio
+    if min_price and max_price:
+        producto = producto.filter(precio__gte=min_price, precio__lte=max_price).distinct()
+
+    # Formatear el precio de cada producto con IVA del 19%
+    for p in producto:
+        precio_con_iva = p.precio * 1.19
+        p.precio = "{:,.0f}".format(precio_con_iva)
+
+    # Obtener categorías, colores y tallas con conteo de productos
+    categorias = Categorias.objects.annotate(product_count=Count('producto'))
+    colores = Colors.choices
+    tallas_dict = {talla: display_name for talla, display_name in Tallas.choices}
+
+    # Contar productos por color y talla
+    productos_por_color = Producto.objects.values('color').annotate(product_count=Count('id'))
+    productos_por_talla = Producto.objects.values('talla').annotate(product_count=Count('id'))
 
     # Configuración de la paginación
     paginator = Paginator(producto, 9)  # Mostrar 9 productos por página
     page_number = request.GET.get('page')  # Obtener el número de página actual
     page_obj = paginator.get_page(page_number)  # Obtener el objeto de la página actual
-    return render(request, 'shop.html', {'page_obj':page_obj, 'paginator':paginator})
+    
+    if request.user.is_authenticated:
+        carrito, creado = Carrito.objects.get_or_create(usuario=request.user)
+        items = carrito.items.all()
+        total = sum(item.producto.precio for item in items)  # Sumar los precios ya con IVA
+        total_formateado = "{:,.0f}".format(total)  # Formatear el total sin agregarle el IVA nuevamente
+        for c in items:
+            producto = c.producto
+            precio_sin_iva = producto.precio
+            iva = precio_sin_iva * iva_tasa
+            precio_con_iva = precio_sin_iva + iva
+            # Actualizar el precio del producto con IVA
+            producto.precio_con_iva = "{:,.0f}".format(precio_con_iva)
+            
+    else:
+        carrito = []
+        items = []
+        total_formateado = 0
+    
+    # Convertir a valores predeterminados si no hay productos
+    min_price = min_price or 1000
+    max_price = max_price or 250000
+
+    return render(
+        request, 
+        'catalogo.html', 
+        {
+            'page_obj': page_obj,
+            'paginator': paginator,
+            'items': items,
+            'total': total_formateado,
+            'categorias': categorias,
+            'colores': colores,
+            'tallas': tallas_dict,
+            'productos_por_color': productos_por_color,
+            'productos_por_talla': productos_por_talla,
+            'min_price': min_price,
+            'max_price': max_price,
+        })
+
 
 def contact(request):
     return render(request, 'contact.html')
 
-@login_required(login_url='login_view')
 def checkout(request):
+    if not request.user.is_authenticated:
+        messages.warning(request, "Debes iniciar sesión para acceder a este módulo.")
+        return redirect('login_view')
+    email = request.user.email
     carrito, creado = Carrito.objects.get_or_create(usuario=request.user)
     items = carrito.items.all()
+
+    iva_tasa = 0.19  # 19% IVA
+
+    total = 0  # Inicializa el total
+
+    for c in items:
+        producto = c.producto
+        precio_sin_iva = producto.precio
+        iva = precio_sin_iva * iva_tasa
+        precio_con_iva = precio_sin_iva + iva
+
+        # Actualizar el precio del producto con IVA y formatear
+        producto.precio_con_iva = "{:,.0f}".format(precio_con_iva)
+
+        # Sumar el precio con IVA al total
+        total += precio_con_iva * c.cantidad
+
+    # Formatear el total
+    total_formateado = "{:,.0f}".format(total)
+
     cantidad_objetos = items.count()
-    total = calcular_nuevo_total(carrito)
-    return render(request, 'checkout.html',{'items': items, 'total': total, "carro":cantidad_objetos})
+
+    return render(
+        request,
+        'checkout.html',
+        {
+            'items': items,
+            'total': total_formateado,
+            'carro': cantidad_objetos,
+            'email':email
+        }
+    )
+
+
 
 def productos(request):
     return render(request, 'registrar_producto.html')
@@ -141,13 +263,17 @@ def create_producto(request):
         form = ProductoForm()
     return render(request, 'registrar_producto.html', {'form': form, 'mensaje':mensaje})
 
-@login_required(login_url='login_view')
 def listar_productos(request):
+    if not request.user.is_authenticated:
+        messages.warning(request, "Debes iniciar sesión para acceder a este módulo.")
+        return redirect('login_view')
     productos = Producto.objects.all()
     return render(request, 'listar_productos.html', {"productos":productos})
 
-@login_required(login_url='login_view')
 def eliminar_producto(request, producto_id):
+    if not request.user.is_authenticated:
+        messages.warning(request, "Debes iniciar sesión para acceder a este módulo.")
+        return redirect('login_view')
     producto = get_object_or_404(Producto, id=producto_id)
     producto.delete()
     messages.success(request, 'el producto se ha eliminado con exito')
@@ -167,20 +293,28 @@ def editar_producto(request, producto_id):
     return render(request, 'editar_producto.html', {'form': form, 'producto': producto})
 
 def agregar_al_carrito(request, id):
+    if not request.user.is_authenticated:
+        messages.warning(request, "Debes iniciar sesión para acceder a este módulo.")
+        return redirect('login_view')
+    
     producto = get_object_or_404(Producto, id=id)
     carrito, creado = Carrito.objects.get_or_create(usuario=request.user)
+    
+    # Obtener la cantidad del formulario
+    cantidad = int(request.POST.get('cantidad', 1))
 
     # Intenta obtener el objeto ItemCarrito para el producto y carrito
     try:
         item_carrito = ItemCarrito.objects.get(producto=producto, carrito=carrito)
         # Si el objeto ya existe, simplemente incrementa la cantidad
-        item_carrito.cantidad += 1
+        item_carrito.cantidad += cantidad
         item_carrito.save()
-        messages.success(request,'Producto Agregado Al Carrito')
+        messages.success(request, 'Producto agregado al carrito')
     except ItemCarrito.DoesNotExist:
         # Si el objeto no existe, créalo y agréguelo al carrito
-        item_carrito = ItemCarrito.objects.create(producto=producto, cantidad=1)
+        item_carrito = ItemCarrito.objects.create(producto=producto, cantidad=cantidad)
         carrito.items.add(item_carrito)
+    
     return redirect('shop')
 
 def quitar_del_carrito(request, producto_id):
@@ -203,10 +337,43 @@ def quitar_del_carrito(request, producto_id):
 
 def ver_carrito(request):
     carrito, creado = Carrito.objects.get_or_create(usuario=request.user)
-    items = carrito.items.all()
-    total = calcular_nuevo_total(carrito)
+    items = carrito.items.all().order_by('id')
 
-    return render(request, 'cart.html', {'items': items, 'total': total})
+    iva_tasa = 0.19  # 19% IVA
+    total_con_iva = 0
+
+    # Manejo de la cantidad
+    if request.method == 'POST':
+        producto_id = request.POST.get('producto_id')
+        accion = request.POST.get('accion')
+
+        if producto_id and accion:
+            item = carrito.items.get(producto__id=producto_id)
+            if accion == 'aumentar':
+                item.cantidad += 1
+                item.save()
+            elif accion == 'disminuir' and item.cantidad > 1:
+                item.cantidad -= 1
+                item.save()
+            return redirect('ver_carrito')  # Recargar la página para reflejar los cambios
+
+    # Cálculo de precios con IVA
+    for c in items:
+        producto = c.producto
+        precio_sin_iva = producto.precio
+        iva = precio_sin_iva * iva_tasa
+        precio_con_iva = precio_sin_iva + iva
+
+        # Actualizar el precio del producto con IVA
+        producto.precio_con_iva = "{:,.0f}".format(precio_con_iva)
+        # Sumar el precio con IVA al total
+        total_con_iva += precio_con_iva * c.cantidad
+
+    # Formatear el total
+    total_con_iva_formateado = "{:,.0f}".format(total_con_iva)
+
+    return render(request, 'cart.html', {'items': items, 'total': total_con_iva_formateado})
+
 
 def actualizar_carrito(request):
     if request.method == 'POST':
@@ -237,15 +404,34 @@ def calcular_nuevo_total(carrito):
     # Aquí debes calcular el nuevo total basado en los ítems del carrito
     items = carrito.items.all()
     total = sum(item.producto.precio * item.cantidad for item in items)
-    return total
+    total_impuesto = total * 1.19  # Incrementar el total en un 19%
+
+    # Formatear el precio total y el precio total con impuesto
+    total_formateado = "{:,.0f}".format(total)
+    total_impuesto_formateado = "{:,.0f}".format(total_impuesto)
+
+    return total_formateado, total_impuesto_formateado
 
 def registrar_usuario(request):
     if request.method == 'POST':
         form = RegistroForm(request.POST)
         if form.is_valid():
-            form.save()
-            messages.success(request, 'Registro Exitoso')
-            return redirect('login_view')  # Puedes redirigir a la página de inicio de sesión después del registro
+            email = form.cleaned_data.get('email')
+            if User.objects.filter(email=email).exists():
+                messages.error(request, 'Este correo electrónico ya está registrado.')
+            else:
+                # Verificar si las contraseñas coinciden
+                password = form.cleaned_data.get('password1')
+                password_confirmacion = request.POST.get('password2')
+                if password == password_confirmacion:
+                    form.save()
+                    messages.success(request, 'Registro Exitoso')
+                    return redirect('login_view')
+                else:
+                    messages.error(request, 'Las contraseñas no coinciden.')
+        else:
+            messages.error(request, 'Por favor, corrige los errores.')
+
     else:
         form = RegistroForm()
 
@@ -274,7 +460,7 @@ def iniciar_sesion(request):
             except User.DoesNotExist:
                 messages.error(request, 'El Usuario O Contraseña Es Incorrecta.')
 
-    return render(request, 'login.html', {'form': form})
+    return redirect('login_view')
 
 @login_required(login_url='login_view')
 def cerrar_sesion(request):
@@ -283,8 +469,10 @@ def cerrar_sesion(request):
     form = RegistroForm()
     return render(request, 'login.html', {'form':form})
 
-@login_required(login_url='login_view')
 def editar_usuario(request):
+    if not request.user.is_authenticated:
+        messages.warning(request, "Debes iniciar sesión para acceder a este módulo.")
+        return redirect('login_view')
     if request.method == 'POST':
         form = UserEditForm(request.POST, instance=request.user)
         if form.is_valid():
@@ -353,39 +541,168 @@ def reset_password(request, token, email):
 def chat_view(request):
     if not request.user.is_authenticated:
         return redirect('login_view')
-    if request.method == "GET":
-        return render(request, 'chat.html',
-                      {'users': User.objects.exclude(username=request.user.username)})
-    
-def message_view(request, sender, receiver):
-    if not request.user.is_authenticated:
-        return redirect('login_view')
-    if request.method == "GET":
-        return render(request, "messages.html",
-                      {'users': User.objects.exclude(username=request.user.username),
-                       'receiver': User.objects.get(id=receiver),
-                       'messages': Message.objects.filter(sender_id=sender, receiver_id=receiver) |
-                                   Message.objects.filter(sender_id=receiver, receiver_id=sender)})
+
+    query = request.GET.get('q')
+
+    if query:
+        users = User.objects.filter(username__icontains=query).exclude(pk=request.user.pk)
+    else:
+        users = User.objects.exclude(pk=request.user.pk)
+
+    return render(request, 'chat.html', {'users': users, 'query': query})
+
     
 @csrf_exempt
-def message_list(request, sender=None, receiver=None):
-    """
-    List all required messages, or create a new message.
-    """
+def message_view(request, sender=None, receiver=None):
+    if not request.user.is_authenticated:
+        return redirect('login_view')
+    
+    print('este debe ser el que recibe el mensaje',receiver)
+
     if request.method == 'GET':
-        messages = Message.objects.filter(sender_id=sender, receiver_id=receiver, is_read=False)
-        serializer = MessageSerializer(messages, many=True, context={'request': request})
-        for message in messages:
-            message.is_read = True
-            message.save()
-        return JsonResponse(serializer.data, safe=False)
+        messages = Message.objects.filter(
+            Q(sender_id=sender, receiver_id=receiver) | Q(sender_id=receiver, receiver_id=sender),
+            is_read=False
+        )
+
+        return render(request, 'chat.html', {'messages': messages, 'sender': sender, 'receiver': receiver, 'users': User.objects.exclude(username=request.user.username)})
+
 
     elif request.method == 'POST':
-        data = JSONParser().parse(request)
-        serializer = MessageSerializer(data=data)
-        if serializer.is_valid():
-            serializer.save()
-            return JsonResponse(serializer.data, status=201)
-        return JsonResponse(serializer.errors, status=400)
+        # Establecer el valor de receiver antes de validar el formulario
+        request.POST._mutable = True
+        request.POST['receiver'] = receiver
+        request.POST._mutable = False
+
+        form = MessageForm(request.POST)
+        if form.is_valid():
+            # Guardar el mensaje si el formulario es válido
+            form.save()
+            messages = Message.objects.filter(
+            Q(sender_id=sender, receiver_id=receiver) | Q(sender_id=receiver, receiver_id=sender),
+            is_read=False
+            )
+           # Redirige a la misma vista (GET) para evitar reenvío del formulario POST
+            return redirect('chat', sender=sender, receiver=receiver)
+        else:
+            # Imprimir errores del formulario
+            print(form.errors)
+            print(request.POST)  # Imprimir los datos POST recibidos para depuración
+                
+        return render(request, 'chat.html', {'sender': sender, 'receiver': receiver, 'users': User.objects.exclude(username=request.user.username)})
+
+def chat_style(request):
+    return render(request,'chat_estilo.html')
+
+def calcular_precios_con_iva(precios, tasa_iva=0.19):
+    precios_con_iva = []
+    for precio in precios:
+        precio_sin_iva = int(precio)  # Convierte a flotante
+        iva = precio_sin_iva * tasa_iva
+        precio_con_iva = precio_sin_iva + iva
+        precios_con_iva.append(precio_con_iva)
+    return precios_con_iva
+
+import re
+
+def parse_address(address):
+    # Expresión regular para dividir la dirección
+    pattern = r'^(.*?)(?:#|N°|No.|No|Num\.|Num|nº|n°)\s*(\d+)\s*(?:-|–)?\s*(\d+)?'
+    
+    match = re.match(pattern, address.strip())
+    
+    if match:
+        street_name = match.group(1).strip()  # Obtén el nombre de la calle
+        street_number = match.group(2).strip()  # Obtén el número de la calle
+        zip_code = match.group(3).strip() if match.group(3) else "000000"  # Código postal por defecto si no está presente
+        
+        return {
+            "street_name": street_name,
+            "street_number": int(street_number),
+            "zip_code": zip_code
+        }
+    else:
+        raise ValueError("No se pudo analizar la dirección")
+
+
+def detalles_venta(request):
+    sdk = mercadopago.SDK("APP_USR-4870740275006288-080115-2e0e446617e6d07ee756aea1514241b6-1928046362")
+    if request.method == 'POST':
+        nombre_user = request.POST.get('name_user')
+        apellido_user = request.POST.get('apellido_user')
+        direccion_user = request.POST.get('direccion_user')
+        email_user = request.POST.get('email_user')
+        celular_user = request.POST.get('celular_user')
+        tipo_documento = request.POST.get('tipo_documento')
+        numero_documento = request.POST.get('numero_documento')
+        print(numero_documento)
+
+        nombres_productos = request.POST.getlist('nombre_producto')
+        id_productos = request.POST.getlist('id_producto')
+        cantidad_productos = request.POST.getlist('cantidad_producto')
+        precio_productos = request.POST.getlist('precio_producto')
+        descripcion_productos = request.POST.getlist('descripcion_producto')
+        items = []
+        # Calcula y formatea los precios con IVA
+        precios_con_iva = calcular_precios_con_iva(precio_productos)
+        direccion_parser = parse_address(direccion_user)
+
+        for i in range(len(nombres_productos)):
+             # Elimina las comas para convertir el precio a float
+            items.append({
+                "id": f"item-ID-{id_productos[i]}",
+                "title": nombres_productos[i],
+                "currency_id": "COP",
+                "picture_url": '',
+                "description": f"{descripcion_productos[i]}",
+                "category_id": "fashion",
+                "quantity": int(cantidad_productos[i]),
+                "unit_price": int(precios_con_iva[i]),
+            })
+        preference_data = {
+            "items":items,
+            "payer": {
+                "name": nombre_user,
+                "surname": apellido_user,
+                "email": email_user,
+                "phone": {
+                    "area_code": "57",
+                    "number": celular_user
+                },
+                "identification": {
+                    "type": tipo_documento,
+                    "number": numero_documento,
+                },
+                "address": direccion_parser
+            },
+            "back_urls": {
+                "success": "https://www.success.com",
+                "failure": "http://www.failure.com",
+                "pending": "http://www.pending.com"
+            },
+            "auto_return": "approved",
+            "payment_methods": {
+                "excluded_payment_methods": [],
+                "excluded_payment_types": [],
+                "installments": 12
+            },
+            "notification_url": "https://www.your-site.com/ipn",
+            "statement_descriptor": "Moda Sin Fronteras",
+            "external_reference": "Reference_1234",
+            "expires": True,
+        }
+
+        preference_response = sdk.preference().create(preference_data)
+        preference = preference_response["response"]
+        
+        context = {
+            'preference_id': preference['id'],
+        }
+        return render(request, 'metodo_pago.html', context)
+    
+def categorias(request):
+    categorias_all = Categorias.objects.all()
+    return render(request, 'categorias.html', {'categoria':categorias_all})
+    
 
 

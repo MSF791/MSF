@@ -8,7 +8,7 @@
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <link rel="shortcut icon" type="image/x-icon" href="img/favicon.ico">
+        <link rel="shortcut icon" type="image/x-icon" href={% static 'img/favicon/prueba.png' %}>
         <!-- Place favicon.ico in the root directory -->		
 
 		<!-- all css here -->
@@ -32,6 +32,7 @@
         <link rel="stylesheet" href={% static 'css/responsive.css' %}>
 		<!-- modernizr js -->
         <script src={% static 'js/vendor/modernizr-2.8.3.min.js' %}></script>
+
     </head>
     <body>
         <!--[if lt IE 8]>
@@ -42,121 +43,7 @@
 		
 		<!-- header start -->
         <header class="header-pos">
-			<!-- header-bottom-area start -->
-			<div class="header-bottom-area">
-				<div class="container">
-					<div class="inner-container">
-						<div class="row">
-							<div class="col-md-2 col-sm-4 col-xs-5">
-								<div class="logo">
-									<a href="index.html"><img src="img/logo-white-text.png" alt="" /></a>
-								</div>
-							</div>
-							<div class="col-md-8 hidden-xs hidden-sm">
-								<div class="main-menu">
-									<nav>
-										<ul>
-											<li class="static"><a href={% url 'shop' %}>Catalogo</a>
-											</li>
-											<li><a href={% url 'shop' %}>Categorias</a>
-												<div class="mega-menu mega-menu-2">
-													<span>
-														<a href="shop.html" class="mega-title">Ropa Para Mujer </a>
-														<a href="shop.html">...</a>
-														<a href="shop.html">...</a>
-														<a href="shop.html">...</a>
-														<a href="shop.html">...</a>
-													</span>
-													<span>
-														<a href="shop.html" class="mega-title">Ropa Para Hombre </a>
-														<a href="shop.html">...</a>
-														<a href="shop.html">...</a>
-														<a href="shop.html">...</a>
-														<a href="shop.html">...</a>
-													</span>
-													<span class="mega-menu-img">
-														<a href="shop.html"><img alt="" src="img/1.jpg"></a>
-													</span>
-												</div>
-											</li>
-											<li><a href={% url 'contact' %}>contactanos</a></li>
-										</ul>
-									</nav>
-								</div>
-							</div>
-							<div class="col-md-2 col-sm-8 col-xs-7 header-right">
-								<div class="my-cart">
-									<div class="total-cart">
-										<a href="{% url 'ver_carrito' %}">
-											<i class="fa fa-shopping-cart"></i>
-										</a>
-									</div>
-									<ul>
-										</a>
-									</ul>
-								</div>
-								<div class="user-meta">
-									<a href="#"><i class="fa fa-cog"></i></a>
-									<ul>
-										<li><a href="#">Mi Cuenta</a></li>
-										<li><a href="{% url 'deseos' %}">Lista De Deseos</a></li>
-										<li><a href="{% url 'login_view' %}">Iniciar Sesion / Registro</a></li>
-										<li><a href="{% url 'cerrar_sesion' %}">Cerrar Sesion</a></li>
-									</ul>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-			<!-- header-bottom-area end -->
-			<!-- mobile-menu-area start -->
-			<div class="mobile-menu-area visible-xs visible-sm">
-				<div class="container">
-					<div class="row">
-						<div class="col-md-12">
-							<div class="mobile-menu">
-								<nav id="dropdown">
-									<ul>
-										<li><a href="index.html">Home</a>
-										</li>
-										<li><a href="shop.html">Shop</a>
-											<ul>
-												<li><a href="#">WOMEN CLOTH</a>
-													<ul>
-														<li><a href="shop.html">casual shirt</a></li>
-														<li><a href="shop.html">rikke t-shirt</a></li>
-														<li><a href="shop.html">mia top </a></li>
-														<li><a href="shop.html">muscle tee</a></li>
-													</ul>
-												</li>
-												<li><a href="#">MEN CLOTH</a>
-													<ul>
-														<li><a href="shop.html">casual shirt</a></li>
-														<li><a href="shop.html">rikke t-shirt</a></li>
-														<li><a href="shop.html">mia top </a></li>
-														<li><a href="shop.html">muscle tee</a></li>
-													</ul>
-												</li>
-												<li><a href="#">WOMEN JEWELRY</a>
-													<ul>
-														<li><a href="shop.html">necklace </a></li>
-														<li><a href="shop.html">chunky short striped</a></li>
-														<li><a href="shop.html">samhar cuff </a></li>
-														<li><a href="shop.html">nail set</a></li>
-													</ul>
-												</li>											
-											</ul>
-										</li>
-										<li><a href="contact.html">Contact</a></li>
-									</ul>
-								</nav>
-							</div>					
-						</div>
-					</div>
-				</div>
-			</div>
-			<!-- mobile-menu-area end -->				
+			{% include 'navbars/navbar.html' %}			
 		</header>
 		<!-- header end -->
 		<!-- breadcrumb-area start -->
@@ -187,8 +74,9 @@
 								<div class="single-pro-tab-content">
 									<!-- Tab panes -->
 									<div class="tab-content">
-										<div role="tabpanel" class="tab-pane active" id="home"><a href="#"><img class="zoom" src={{producto.imagen.url}} alt="" /></a></div>
-										
+										<div id="zoom-container" class="zoom-container">
+											<div role="tabpanel" class="tab-pane active" id="home"><a href="#"><img class="zoom" id="myimage" src={{producto.imagen.url}} /></a></div>
+										</div>
 									</div>
 									<!-- Nav tabs -->
 									<ul class="single-product-tab" role="tablist">
@@ -198,10 +86,9 @@
 							</div>
 							<div class="col-md-7 col-sm-7 col-xs-12 shop-list shop-details">								
 								<div class="product-content">
-									<h3><a>{{producto.nombre}}</a></h3>
+									<h3><a>{{ producto.nombre }}</a></h3>
 									<div class="price">
-										<span>$ {{producto.precio}}</span>
-										
+										<span>$ {{ producto.precio }}</span>
 									</div>
 									<div class="s-p-rating">
 										<span class="rating">
@@ -212,22 +99,25 @@
 											<i class="fa fa-star"></i>										
 										</span>	
 									</div>
-									<p>{{producto.descripcion}}</p>
+									<p>{{ producto.descripcion }}</p>
 									<div class="product-action">
-										<div class="cart-plus">
-											<form action="#">
-												<div class="cart-plus-minus"><input type="text" value="1" /></div>
-											</form>
-										</div>
+										{% if p.stock == 'si' %}
+										<form action="{% url 'agregar_al_carrito' producto.id %}" method="post">
+											{% csrf_token %}
+											<div class="cart-plus-minus">
+												<label for="">Cantidad</label>
+												<input type="number" name="cantidad" value="1" min="1" />
+											</div>
+											<button type="submit"><i class="fas fa-shopping-cart"></i> Agregar Al Carro</button>
+										</form>
 										<div class="button-top">
-											<a href="{% url 'agregar_a_deseos' producto.id %}" ><i class="fa fa-heart"></i></a>
-										</div>
-										<div class="button-cart">
-											<a href="{% url 'agregar_al_carrito' producto.id %}"><button><i class="fa fa-shopping-cart"></i>a add to cart</button></a>
+											<a href="{% url 'agregar_a_deseos' producto.id %}" ><i class="fas fa-heart"></i></a>
 										</div>
 									</div>	
+										{% endif %}
 								</div>							
 							</div>
+							
 						</div>
 						<div class="row">
 							<div class="col-md-12 col-sm-12">
@@ -235,89 +125,27 @@
 										<div>
 										  <!-- Nav tabs -->
 										  <ul class="pro-details-tab" role="tablist">
-											<li role="presentation" class="active"><a href="#tab-desc" aria-controls="tab-desc" role="tab" data-toggle="tab">Description</a></li>
+											<li role="presentation" class="active"><a aria-controls="tab-desc" role="tab" data-toggle="tab"><h1>Especificaciones Del Producto</h1></a></li>
 										  </ul>
 										  <!-- Tab panes -->
 										  <div class="tab-content">
 											<div role="tabpanel" class="tab-pane active" id="tab-desc">
 												<div class="product-tab-desc">
-													<p>{{p.descripcion}}</p>
 													<ul id="product-desc-t">
-														<li>Tamaño: </li>
-														<li>Color: </li>
-														<li>Notched lapels</li>
-														<li>Twin button front fastening </li>
-														<li>Internal pockets</li>
-														<li>Centre back vent</li>
-														<li>70% discount</li>
+														<li>Detalles: {{ producto.descripcion }}</li>
+														<li>Talla: {{ producto.talla }}</li>
+														<li>Color: {{ producto.color }}</li>
+														<li>
+															Categorias: {% for categoria in producto.categoria.all %}
+															{{ categoria.nombre }}{% if not forloop.last %}, {% endif %}
+															{% endfor %}
+													</li>
 													</ul>
 												</div>
 											</div>
 											<div role="tabpanel" class="tab-pane" id="page-info">
 												<div class="product-tab-desc">
 													<p>{{producto.descripcion}}</p>
-												</div>
-											</div>
-											<div role="tabpanel" class="tab-pane" id="page-comments">
-												<div class="product-tab-desc">
-													<div class="product-page-comments">
-														<h2>1 review for Integer consequat ante lectus</h2>
-														<ul>
-															<li>
-																<div class="product-comments">
-																	<img src="img/author.jpg" alt="" />
-																	<div class="product-comments-content">
-																		<p><strong>admin</strong> -
-																			<span>March 7, 2015:</span>
-																			<span class="pro-comments-rating">
-																				<i class="fa fa-star"></i>								
-																				<i class="fa fa-star"></i>								
-																				<i class="fa fa-star"></i>								
-																				<i class="fa fa-star"></i>								
-																			</span>
-																		</p>
-																		<div class="desc">
-																			Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam fringilla augue nec est tristique auctor. Donec non est at libero vulputate rutrum.
-																		</div>
-																	</div>
-																</div>
-															</li>
-														</ul>
-														<div class="review-form-wrapper">
-															<h3>Add a review</h3>
-															<form action="#">
-																<input type="text" placeholder="your name"/>
-																<input type="email" placeholder="your email"/>
-																<div class="your-rating">
-																	<h5>Your Rating</h5>
-																	<span>
-																		<a href="#"><i class="fa fa-star"></i></a>
-																		<a href="#"><i class="fa fa-star"></i></a>
-																	</span>
-																	<span>
-																		<a href="#"><i class="fa fa-star"></i></a>
-																		<a href="#"><i class="fa fa-star"></i></a>
-																		<a href="#"><i class="fa fa-star"></i></a>
-																	</span>
-																	<span>
-																		<a href="#"><i class="fa fa-star"></i></a>
-																		<a href="#"><i class="fa fa-star"></i></a>
-																		<a href="#"><i class="fa fa-star"></i></a>
-																		<a href="#"><i class="fa fa-star"></i></a>
-																	</span>
-																	<span>
-																		<a href="#"><i class="fa fa-star"></i></a>
-																		<a href="#"><i class="fa fa-star"></i></a>
-																		<a href="#"><i class="fa fa-star"></i></a>
-																		<a href="#"><i class="fa fa-star"></i></a>
-																		<a href="#"><i class="fa fa-star"></i></a>
-																	</span>
-																</div>
-																<textarea id="product-message" cols="30" rows="10" placeholder="Your Rating"></textarea>
-																<input type="submit" value="submit" />
-															</form>
-														</div>
-													</div>
 												</div>
 											</div>
 										  </div>
@@ -357,60 +185,7 @@
 		<!-- shop-area end -->
 		<!-- footer start -->
 		<footer>
-			<div class="footer-top">
-				<div class="container">
-					<div class="row">
-						<div class="col-md-12">
-							<div class="footer-logo">
-								<img src="img/logo-white-text.png" alt="" />
-								<p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore <br /> magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation.</p>
-								
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-			<!-- footer-top-area start -->
-			<div class="footer-top-area">
-				<div class="container">
-					<div class="row">
-						<!-- footer-widget start -->
-						<div class="col-lg-3 col-md-3 col-sm-4">
-							<div class="footer-widget">
-								<h3>CONTACT US</h3>
-								<ul class="footer-contact">
-									
-									<li>
-										<i class="fa fa-envelope"> </i>	
-										Email: admin@BasicTheme.com
-									</li>
-									<li>
-										<i class="fa fa-phone"> </i>
-										Phone: +123 455657589
-									</li>
-								</ul>
-							</div>
-						</div>
-						<!-- footer-widget end -->					
-											
-					</div>
-				</div>
-			</div>
-			<!-- footer-top-area end -->
-			<!-- footer-bottom-area start -->
-			<div class="footer-bottom-area">
-				<div class="container">
-					<div class="row">
-						<div class="col-lg-6 col-md-6 col-sm-6">
-							<div class="copyright">
-								<p>Copyright © <a href="#">Pabna</a>. All Rights Reserved</p>
-							</div>
-						</div>
-						
-					</div>
-				</div>
-			</div>
-			<!-- footer-bottom-area end -->			
+			{% include 'footer/footer.html'%}
 		</footer>
 		<!-- footer end -->
 
@@ -486,12 +261,11 @@
         <script src={% static 'js/jquery-ui.min.js' %}></script>
 		<!-- wow js -->
         <script src={% static 'js/wow.min.js' %}></script>
-		<script>
-			$(".zoom").elevateZoom();
-		</script>
 		<!-- plugins js -->
         <script src={% static 'js/plugins.js' %}></script>
 		<!-- main js -->
         <script src={% static 'js/main.js' %}></script>
+		<!-- Zoom para la img -->
+		<script src="{% static 'js/zoomImage.js' %}"></script>
     </body>
 </html>

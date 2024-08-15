@@ -1,0 +1,321 @@
+﻿﻿{% load static %}
+<!doctype html>
+<html class="no-js" lang="es">
+
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="x-ua-compatible" content="ie=edge">
+	<title>Catalogo || MSF</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" type="image/x-icon" href={% static 'img/favicon/prueba.png' %}>
+
+	<!-- Place favicon.ico in the root directory -->
+
+	<!-- all css here -->
+	<!-- bootstrap v3.3.6 css -->
+
+	<link rel="stylesheet" href={% static 'css/bootstrap.min.css' %}>
+	<!-- animate css -->
+	<link rel="stylesheet" href={% static 'css/animate.css' %}>
+	<!-- jquery-ui.min css -->
+	<link rel="stylesheet" href={% static 'css/jquery-ui.min.css' %}>
+	<!-- meanmenu css -->
+	<link rel="stylesheet" href={% static 'css/meanmenu.min.css' %}>
+	<!-- owl.carousel css -->
+	<link rel="stylesheet" href={% static 'css/owl.carousel.css' %}>
+	<!-- slick css -->
+	<link rel="stylesheet" href={% static 'css/slick.css' %}>
+	<!-- font-awesome css -->
+	<link rel="stylesheet" href={% static 'css/font-awesome.min.css' %}>
+	<!-- style css -->
+	<link rel="stylesheet" href={% static 'css/style.css' %}>
+	<!-- responsive css -->
+	<link rel="stylesheet" href={% static 'css/responsive.css' %}>
+	<!-- modernizr js -->
+	<link rel="stylesheet" href={% static 'css/style_cart_button.css' %}>
+
+	<link rel="stylesheet" href={% static 'css/style_card.css' %}>
+
+	<script src={% static 'js/vendor/modernizr-2.8.3.min.js' %}></script>
+</head>
+
+<body>
+	<!-- header start -->
+	<header class="header-pos">
+		{% include 'navbars/navbar.html' %}
+	</header>
+	<!-- header end -->
+	<!-- breadcrumb-area start -->
+	<div class="breadcrumb-area">
+		<div class="container">
+			<div class="row">
+				<div class="col-md-12">
+					<div class="breadcrumb-list">
+						<h1>CATALOGO</h1>
+						<ul>
+							<li><a href={% url 'index' %}>Inicio</a> <span class="divider">|</span></li>
+							<li><a href={% url 'categorias' %}>Categorias</a> <span class="divider">|</span></li>
+							<li><a href={% url 'ver_carrito' %}>Terminar Compra</a></li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- breadcrumb-area end -->
+	<!-- shop-area start -->
+	<div class="shop-area pad-60">
+		<div class="container">
+			<div class="row">
+				<!-- left-sidebar start -->
+				<div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
+					<!-- widget-categories start -->
+					<aside class="widget widget-categories">
+						<h3 class="sidebar-title">Categorias</h3>
+						<ul class="sidebar-menu">
+							{% for categoria in categorias %}
+							<li>
+								<a href="?categoria={{ categoria.id }}">{{ categoria.nombre }}</a> 
+								<span class="count">({{ categoria.product_count }})</span>
+							</li>
+							{% endfor %}
+						</ul>
+					</aside>
+					<!-- widget-categories end -->
+					<!-- shop-filter start -->
+					<aside class="widget shop-filter">
+						<h3 class="sidebar-title">Filtro Por Precio</h3>
+						<div class="info_widget">
+							<form method="GET" action="{% url 'shop' %}" autocomplete="off">
+								<div class="price_filter">
+									<div id="slider-range"></div>
+									<div class="price_slider_amount">
+										<input type="text" id="amount" name="price" value="{% if min_price %}{{ min_price }} - {% endif %}{% if max_price %}{{ max_price }}{% endif %}" placeholder="Add Your Price" />
+										<input type="hidden" name="min_price" id="min_price" value="{{ min_price }}" />
+										<input type="hidden" name="max_price" id="max_price" value="{{ max_price }}" />
+										<input type="submit" value="Filtro" />
+									</div>
+								</div>
+								<!-- Include other filters -->
+								<input type="hidden" name="categoria" value="{{ request.GET.categoria }}" />
+								<input type="hidden" name="talla" value="{{ request.GET.talla }}" />
+								<input type="hidden" name="color" value="{{ request.GET.color }}" />
+							</form>
+						</div>
+					</aside>
+					<!-- shop-filter end -->
+					<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+					<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+					<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" />
+
+					<script>
+						$(function() {
+							// Función para actualizar el slider y el campo de entrada
+							function updateSlider(minPrice, maxPrice) {
+								$("#slider-range").slider("values", [minPrice, maxPrice]);
+								$("#amount").val("$" + minPrice + " - $" + maxPrice);
+								$("#min_price").val(minPrice);
+								$("#max_price").val(maxPrice);
+							}
+						
+							// Obtén los valores desde los campos ocultos
+							var minPrice = parseInt($('#min_price').val(), 10) || 0;
+							var maxPrice = parseInt($('#max_price').val(), 10) || 1000;
+						
+							// Configura el slider
+							$("#slider-range").slider({
+								range: true,
+								min: 0,  // Valor mínimo fijo
+								max: Math.max(maxPrice, 1000),  // Usa el valor máximo dinámico o un valor fijo como respaldo
+								values: [minPrice, maxPrice],
+								slide: function(event, ui) {
+									$("#amount").val("$" + ui.values[0] + " - $" + ui.values[1]);
+									$("#min_price").val(ui.values[0]);
+									$("#max_price").val(ui.values[1]);
+								}
+							});
+						
+							// Inicializa el valor del campo de texto
+							$("#amount").val("$" + $("#slider-range").slider("values", 0) + " - $" + $("#slider-range").slider("values", 1));
+						
+							// Actualiza el slider si se cambian los valores manualmente
+							$("#amount").on('change', function() {
+								var values = $(this).val().replace(/\$|\,/g, '').split(' - ');
+								var minPrice = parseInt(values[0], 10) || 0;
+								var maxPrice = parseInt(values[1], 10) || 1000;
+								updateSlider(minPrice, maxPrice);
+							});
+						});
+					</script>						
+						
+					<!-- filter-by start -->
+					<aside class="widget filter-by">
+						<h3 class="sidebar-title">TALLAS</h3>
+						<ul class="sidebar-menu">
+							{% for talla, display_name in tallas.items %}
+								<li>
+									<a href="?talla={{ talla }}{% if request.GET.categoria %}&categoria={{ request.GET.categoria }}{% endif %}">{{ talla }}</a>
+									<span class="count">({% for item in productos_por_talla %}{% if item.talla == talla %}{{ item.product_count }}{% endif %}{% endfor %})</span>
+								</li>
+							{% endfor %}
+						</ul>
+					</aside>
+					<!-- filter-by end -->
+					<!-- widget start -->
+					<aside class="widget filter-by">
+						<h3 class="sidebar-title">Colores</h3>
+						<ul class="sidebar-menu">
+							{% for color, display_name in colores %}
+								<li>
+									<a href="?color={{ color }}{% if request.GET.categoria %}&categoria={{ request.GET.categoria }}{% endif %}{% if request.GET.talla %}&talla={{ request.GET.talla }}{% endif %}">{{ display_name }}</a>
+									<span class="count">({% for item in productos_por_color %}{% if item.color == color %}{{ item.product_count }}{% endif %}{% endfor %})</span>
+								</li>
+							{% endfor %}
+						</ul>
+					</aside>
+					<!-- widget end -->
+				</div>
+				<!-- left-sidebar end -->
+				<div class="col-md-9 col-sm-12 col-xs-12">
+					<div class="shop-content">
+						<!-- Nav tabs -->
+						<div class="shop-breadcrumb">
+							<ul>
+								{% if page_obj.has_previous %}
+								<li><a href="?page=1"><i class="fas fa-angle-left"></i></a></li>
+								{% endif %}
+								{% for num in paginator.page_range %}
+								<li {% if page_obj.number == num %} class="active" {% endif %}>
+									<a href="?page={{ num }}">{{ num }}</a></li>
+								{% endfor %}
+								{% if page_obj.has_next %}
+								<li><a href="?page={{ page_obj.next_page_number }}"><i
+											class="fas fa-angle-right"></i></a></li>
+								{% endif %}
+							</ul>
+						</div>
+
+						<div class="clear"></div>
+						<!-- Tab panes -->
+						<div class="tab-content">
+							<div role="tabpanel" class="tab-pane active" id="home">
+								<div class="row">
+									{% if messages %}
+										<ul class="messages">
+											{% for message in messages %}
+											<div class="alert alert-success" role="alert" id="miAlerta">
+												<strong>{{message}}</strong>
+											</div>
+											{% endfor %}
+										</ul>
+									{% endif %}
+									<section>
+										<div class="container_card">
+											{% for p in page_obj %}
+											<div class="card_modified">
+
+												{% if p.stock == 'no' %}
+												<div class="imgBx">
+													<div class="no-stock"><h2>No Disponible</h2></div>
+													<h2>{{ p.nombre }}</h2>
+												</div>
+												{%else%}
+												<div class="imgBx">
+													<img src="{{ p.imagen.url }}" width="230px" height="230px">
+													<h2>{{ p.nombre }}</h2>
+												</div>
+												{% endif %}
+												
+												<div class="content">
+													<div class="color">
+														<h3>Precio: $ {{p.precio}} COP</h3>
+													</div>
+													{% if p.stock == 'si' %}
+													<div class="size">
+														<a href="{% url 'details' p.id %}">Ver Detalles!</a>
+													</div>
+														<a href="{% url 'agregar_al_carrito' p.id %}">Agregar Al Carrito!</a>
+													{% else %}
+													<div class="size">
+														<a href="{% url 'details' p.id %}">Ver Detalles!</a>
+													</div>
+														<a>No Disponible</a>
+													{% endif %}
+												</div>
+											</div>
+											
+											{% endfor %}
+										</div>
+									</section>			
+									<!--view as-->
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- shop-area end -->
+		<!-- Boton de productos -->
+		<div class="container_button">
+			<button id="toggleButton" class="toggle-button">
+				<svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-cart3" viewBox="0 0 16 16">
+					<path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .49.598l-1 5a.5.5 0 0 1-.465.401l-9.397.472L4.415 11H13a.5.5 0 0 1 0 1H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5M3.102 4l.84 4.479 9.144-.459L13.89 4zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4m7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4m-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2m7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2"/>
+			  	</svg>
+			</button>
+			<div id="productList" class="product-list">
+				<div id="close" class="close">
+					<a><i class="fa-solid fa-x"></i></a>
+				</div>
+				<div class="carTitle">
+					<div class="iconCar">
+						<svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-cart3" viewBox="0 0 16 16">
+							<path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .49.598l-1 5a.5.5 0 0 1-.465.401l-9.397.472L4.415 11H13a.5.5 0 0 1 0 1H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5M3.102 4l.84 4.479 9.144-.459L13.89 4zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4m7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4m-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2m7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2"/>
+						</svg>
+					</div>
+					<b>Tu carrito</b>
+				</div>
+				<div class="productRow">
+					{% if items %}
+						{% for item in items %}
+						<div class="product-item">
+							<div><img alt="" src="{{ item.producto.imagen.url }}" width="70px" height="auto"></div>
+							<div><p>{{item.producto.nombre}}</p></div>
+							<div><p>{{item.producto.descripcion}}</p></div>
+							<div><p>{{item.producto.precio_con_iva}}  x  <b class="cantidad">{{item.cantidad}}</b></p></div>
+						</div>
+						{% endfor %}
+						{% else %}
+						<h1>No hay productos agregados en el carrito</h1>
+                        {% endif %}
+				</div>
+				<div class="vercarro">
+					<a href="{% url 'ver_carrito' %}" class="view-cart">Ver carro <i class="fa-solid fa-share"></i></a>
+				</div>								
+					
+			</div>
+		</div>
+
+		<!-- all js here -->
+		<!-- jquery latest version -->
+		<script src={% static 'js/vendor/jquery-1.12.0.min.js' %}></script>
+		<!-- bootstrap js -->
+		<script src={% static 'js/bootstrap.min.js' %}></script>
+		<!-- owl.carousel js -->
+		<script src={% static 'js/owl.carousel.min.js' %}></script>
+		<!-- meanmenu js -->
+		<script src={% static 'js/jquery.meanmenu.js' %}></script>
+		<!-- jquery-ui js -->
+		<script src={% static 'js/jquery-ui.min.js' %}></script>
+		<!-- wow js -->
+		<script src={% static 'js/wow.min.js' %}></script>
+		<!-- plugins js -->
+		<script src={% static 'js/plugins.js' %}></script>
+		<!-- main js -->
+		<script src={% static 'js/main.js' %}></script>
+
+		<script src="{% static 'js/app.js' %}"></script>
+		<script src="{% static 'js/button_cart.js' %}"></script>
+</body>
+
+</html>

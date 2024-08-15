@@ -4,11 +4,11 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="x-ua-compatible" content="ie=edge">
-        <title>Contact || Pabna</title>
+        <title>Contactanos || MSF</title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <link rel="shortcut icon" type="image/x-icon" href={% static 'img/favicon.ico' %}">
+        <link rel="shortcut icon" type="image/x-icon" href={% static 'img/favicon/prueba.png' %}>
         <!-- Place favicon.ico in the root directory -->
 
 
@@ -43,119 +43,7 @@
 		
 		<!-- header start -->
         <header class="header-pos">
-			<!-- header-bottom-area start -->
-			<div class="header-bottom-area">
-				<div class="container">
-					<div class="inner-container">
-						<div class="row">
-							<div class="col-md-2 col-sm-4 col-xs-5">
-								<div class="logo">
-									<a href="index.html"><img src="img/logo-white-text.png" alt="" /></a>
-								</div>
-							</div>
-							<div class="col-md-8 hidden-xs hidden-sm">
-								<div class="main-menu">
-									<nav>
-										<ul>
-											<li class="static"><a href={% url 'shop' %}>Catalogo</a>
-											</li>
-											<li><a href={% url 'shop' %}>Categorias</a>
-												<div class="mega-menu mega-menu-2">
-													<span>
-														<a href="shop.html" class="mega-title">Ropa Para Mujer </a>
-														<a href="shop.html">...</a>
-														<a href="shop.html">...</a>
-														<a href="shop.html">...</a>
-														<a href="shop.html">...</a>
-													</span>
-													<span>
-														<a href="shop.html" class="mega-title">Ropa Para Hombre </a>
-														<a href="shop.html">...</a>
-														<a href="shop.html">...</a>
-														<a href="shop.html">...</a>
-														<a href="shop.html">...</a>
-													</span>
-													<span class="mega-menu-img">
-														<a href="shop.html"><img alt="" src="img/1.jpg"></a>
-													</span>
-												</div>
-											</li>
-											<li><a href={% url 'contact' %}>contactanos</a></li>
-										</ul>
-									</nav>
-								</div>
-							</div>
-							<div class="col-md-2 col-sm-8 col-xs-7 header-right">
-								<div class="my-cart">
-									<div class="total-cart">
-										<a href="{% url 'ver_carrito' %}">
-											<i class="fa fa-shopping-cart"></i>
-										</a>
-									</div>
-									<ul>
-										</a>
-									</ul>
-								</div>
-								<div class="user-meta">
-									<a href="#"><i class="fa fa-cog"></i></a>
-									<ul>
-										<li><a href="#">Mi Cuenta</a></li>
-										<li><a href="{% url 'deseos' %}">Lista De Deseos</a></li>
-										<li><a href="{% url 'login_view' %}">Iniciar Sesion / Registro</a></li>
-										<li><a href="{% url 'cerrar_sesion' %}">Cerrar Sesion</a></li>
-									</ul>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-			<!-- header-bottom-area end -->
-			<!-- mobile-menu-area start -->
-			<div class="mobile-menu-area visible-xs visible-sm">
-				<div class="container">
-					<div class="row">
-						<div class="col-md-12">
-							<div class="mobile-menu">
-								<nav id="dropdown">
-									<ul>
-										<li><a href="shop.html">Ropa</a>
-											<ul>
-												<li><a href="#">WOMEN CLOTH</a>
-													<ul>
-														<li><a href="shop.html">casual shirt</a></li>
-														<li><a href="shop.html">rikke t-shirt</a></li>
-														<li><a href="shop.html">mia top </a></li>
-														<li><a href="shop.html">muscle tee</a></li>
-													</ul>
-												</li>
-												<li><a href="#">MEN CLOTH</a>
-													<ul>
-														<li><a href="shop.html">casual shirt</a></li>
-														<li><a href="shop.html">rikke t-shirt</a></li>
-														<li><a href="shop.html">mia top </a></li>
-														<li><a href="shop.html">muscle tee</a></li>
-													</ul>
-												</li>
-												<li><a href="#">WOMEN JEWELRY</a>
-													<ul>
-														<li><a href="shop.html">necklace </a></li>
-														<li><a href="shop.html">chunky short striped</a></li>
-														<li><a href="shop.html">samhar cuff </a></li>
-														<li><a href="shop.html">nail set</a></li>
-													</ul>
-												</li>											
-											</ul>
-										</li>
-										<li><a href="contact.html">Contactanos</a></li>
-									</ul>
-								</nav>
-							</div>					
-						</div>
-					</div>
-				</div>
-			</div>
-			<!-- mobile-menu-area end -->				
+			{% include 'navbars/navbar.html' %}
 		</header>
 		<!-- header end -->
 		<!-- breadcrumb-area start -->
@@ -189,7 +77,7 @@
 									<i class="fa fa-phone"></i>
 								</div>
 								<div class="contact-method">
-									<h2>+000-111-2222</h2>
+									<h2>3017832534</h2>
 									<span>Telefono</span>
 								</div>
 							</div>
@@ -198,7 +86,7 @@
 									<i class="fa fa-envelope"></i>
 								</div>
 								<div class="contact-method">
-									<h2>admin@basictheme.net</h2>
+									<h2>modasinfronteras2@gmail.com</h2>
 									<span>Correo</span>
 								</div>
 							</div>
@@ -220,65 +108,7 @@
 		<!-- contact-area end -->	
 		<!-- footer start -->
 		<footer>
-			<div class="footer-top">
-				<div class="container">
-					<div class="row">
-						<div class="col-md-12">
-							<div class="footer-logo">
-								<img src={% static 'img/logo-white-text.png' %} alt="" />
-								<p></p>
-								
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-			<!-- footer-top-area start -->
-			<div class="footer-top-area">
-				<div class="container">
-					<div class="row">
-						<!-- footer-widget start -->
-						<div class="col-lg-3 col-md-3 col-sm-4">
-							<div class="footer-widget">
-								<h3>CONTACT US</h3>
-								<ul class="footer-contact">
-									<li>
-										<i class="fa fa-envelope"> </i>
-										Email: admin@BasicTheme.com
-									</li>
-									<li>
-										<i class="fa fa-phone"> </i>
-										Phone: +123 455657589
-									</li>
-								</ul>
-							</div>
-						</div>
-						<!-- footer-widget end -->
-						
-					</div>
-				</div>
-			</div>
-			<!-- footer-top-area end -->
-			<!-- footer-bottom-area start -->
-			<div class="footer-bottom-area">
-				<div class="container">
-					<div class="row">
-						<div class="col-lg-6 col-md-6 col-sm-6">
-							<div class="copyright">
-								<p>Copyright © <a href="#">Pabna</a>. All Rights Reserved</p>
-								<div class="payment-img">
-									<img src={% static 'img/paypal.png' %} width="40px" height="40px">
-									<img src={% static 'img/tarjeta.png' %} width="40px" height="40px">
-									<img src={% static 'img/nequi.svg' %} width="40px" height="40px">
-								</div>
-							</div>
-							
-						</div>
-						
-					</div>
-				</div>
-			</div>
-			<!-- footer-bottom-area end -->
+			{% include 'footer/footer.html'%}
 		</footer>
 		<!-- footer end -->
 

@@ -1,0 +1,104 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Navbar</title>
+    <link rel="stylesheet" href={% static 'css/style.css' %}>
+    <link rel="stylesheet" href={% static 'css/style_navbar.css' %}>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+<body>
+    <nav class="navbar">
+        <div class="navigation">
+            <div class="icono">
+                <i class="fa-solid fa-bag-shopping fa"></i><p>MSF</p>
+            </div>
+            <ul>
+                <li class="list {% if request.resolver_match.view_name == 'index' %}active{% endif %}">
+                    <a href={% url 'index' %}>
+                        <span class="icon"><i class="fa-solid fa-house"></i></span>
+                        <span class="text">Inicio</span>
+                    </a>
+                </li>
+    
+                <li class="list {% if request.resolver_match.view_name == 'shop' %}active{% endif %}">
+                    <a href={% url 'shop' %}> 
+                        <span class="icon"><i class="fas fa-shopping-bag"></i></span>
+                        <span class="text">Catalogo</span>
+                    </a>
+                </li>
+    
+                <li class="list {% if request.resolver_match.view_name == 'categorias' %}active{% endif %}">
+                    <a id="categorias" href={% url 'categorias' %}>
+                        <span class="icon"><i class="fas fa-tags"></i></span>
+                        <span class="text">Categorias</span>
+                    </a>
+                </li>
+    
+                <li class="list {% if request.resolver_match.view_name == 'contact' %}active{% endif %}{% if request.resolver_match.view_name == 'detalles_venta' %}active{% endif %}">
+                    <a href={% url 'contact' %}>
+                        <span class="icon"><i class="fas fa-envelope"></i></span>
+                        <span class="text">Contactanos</span>
+                    </a>
+                </li>
+                
+                <li class="list {% if request.resolver_match.view_name == 'chats' %}active{% endif %}">
+                    <a href="{% url 'chats' %}">
+                        <span class="icon"><i class="fa-solid fa-message"></i></span>
+                        <span class="text">Chatea</span>
+                    </a>
+                </li>
+    
+                <li class="list {% if request.resolver_match.view_name == 'editar_usuario' %}active{% endif %}{% if request.resolver_match.view_name == 'password' %}active{% endif %}{% if request.resolver_match.view_name == 'reset_password' %}active{% endif %}">
+                    <a href="{% url 'editar_usuario' %}">
+                        <span class="icon"><i class="fa-solid fa-user-large"></i></span>
+                        <span class="text">Perfil</span>
+                    </a>
+                </li>
+
+                <li class="list 
+                {% if request.resolver_match.view_name == 'login_view' %}active{% endif %} 
+                {% if request.resolver_match.view_name == 'ver_carrito' %}active{% endif %} 
+                {% if request.resolver_match.view_name == 'check' %}active{% endif %}
+                {% if request.resolver_match.view_name == 'cerrar_sesion' %}active{% endif %}
+                {% if request.resolver_match.view_name == 'details' %}active{% endif %}
+                ">
+                    <a id="toggle-mode">
+                        <span class="icon"><i class="fa-solid fa-circle-half-stroke"></i></span>
+                        <span id="MC"class="text">Modo claro</span>
+                        <span id="MO"class="text">Modo oscuro</span>
+                    </a>
+                </li>
+                <div class="indicator"></div>
+            </ul>
+            <div class="sesion">
+                {%  if user.is_authenticated %}
+                    <a href="{% url 'cerrar_sesion' %}">
+                        <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                        <p>Cerrar sesion</p>
+                    </a>
+                {% else %}
+                    <a href="{% url 'login_view' %}">
+                        <i class="fa-solid fa-arrow-right-to-bracket"></i>
+                        <p>Iniciar sesion</p>
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+    <script>
+        const list = document.querySelectorAll('.list')
+        function activeLink(){
+            list.forEach((item)=>
+            item.classList.remove('active'));
+            this.classList.add('active');
+        }
+        list.forEach((item)=>
+            item.addEventListener('click', activeLink)
+        );
+    </script>
+    <script src={% static 'js/modeDark.js' %}></script>
+</body>
+</html>

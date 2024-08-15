@@ -8,7 +8,7 @@
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <link rel="shortcut icon" type="image/x-icon" href="img/favicon.ico">
+        <link rel="shortcut icon" type="image/x-icon" href={% static 'img/favicon/prueba.png' %}>
         <!-- Place favicon.ico in the root directory -->
 
 		<!-- all css here -->
@@ -42,120 +42,7 @@
 		
 		<!-- header start -->
         <header class="header-pos">
-			<!-- header-bottom-area start -->
-			<div class="header-bottom-area">
-				<div class="container">
-					<div class="inner-container">
-						<div class="row">
-							<div class="col-md-2 col-sm-4 col-xs-5">
-								<div class="logo">
-									<a href="index.html"><img src="img/logo-white-text.png" alt="" /></a>
-								</div>
-							</div>
-							<div class="col-md-8 hidden-xs hidden-sm">
-								<div class="main-menu">
-									<nav>
-										<ul>
-											<li class="static"><a href={% url 'shop' %}>Catalogo</a>
-											</li>
-											<li><a href={% url 'shop' %}>Categorias</a>
-												<div class="mega-menu mega-menu-2">
-													<span>
-														<a href="shop.html" class="mega-title">Ropa Para Mujer </a>
-														<a href="shop.html">...</a>
-														<a href="shop.html">...</a>
-														<a href="shop.html">...</a>
-														<a href="shop.html">...</a>
-													</span>
-													<span>
-														<a href="shop.html" class="mega-title">Ropa Para Hombre </a>
-														<a href="shop.html">...</a>
-														<a href="shop.html">...</a>
-														<a href="shop.html">...</a>
-														<a href="shop.html">...</a>
-													</span>
-													<span class="mega-menu-img">
-														<a href="shop.html"><img alt="" src="img/1.jpg"></a>
-													</span>
-												</div>
-											</li>
-											<li><a href={% url 'contact' %}>contactanos</a></li>
-										</ul>
-									</nav>
-								</div>
-							</div>
-							<div class="col-md-2 col-sm-8 col-xs-7 header-right">
-								<div class="my-cart">
-									<div class="total-cart">
-										<a href="{% url 'ver_carrito' %}">
-											<i class="fa fa-shopping-cart"></i>
-										</a>
-									</div>
-									<ul>
-										</a>
-									</ul>
-								</div>
-								<div class="user-meta">
-									<a href="#"><i class="fa fa-cog"></i></a>
-									<ul>
-										<li><a href="#">Mi Cuenta</a></li>
-										<li><a href="{% url 'deseos' %}">Lista De Deseos</a></li>
-										<li><a href="{% url 'login_view' %}">Iniciar Sesion / Registro</a></li>
-										<li><a href="{% url 'cerrar_sesion' %}">Cerrar Sesion</a></li>
-
-									</ul>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-			<!-- header-bottom-area end -->
-			<!-- mobile-menu-area start -->
-			<div class="mobile-menu-area visible-xs visible-sm">
-				<div class="container">
-					<div class="row">
-						<div class="col-md-12">
-							<div class="mobile-menu">
-								<nav id="dropdown">
-									<ul>
-										<li><a href={% url 'shop' %}>Ropa</a>
-											<ul>
-												<li><a href="#">WOMEN CLOTH</a>
-													<ul>
-														<li><a href="shop.html">casual shirt</a></li>
-														<li><a href="shop.html">rikke t-shirt</a></li>
-														<li><a href="shop.html">mia top </a></li>
-														<li><a href="shop.html">muscle tee</a></li>
-													</ul>
-												</li>
-												<li><a href="#">MEN CLOTH</a>
-													<ul>
-														<li><a href="shop.html">casual shirt</a></li>
-														<li><a href="shop.html">rikke t-shirt</a></li>
-														<li><a href="shop.html">mia top </a></li>
-														<li><a href="shop.html">muscle tee</a></li>
-													</ul>
-												</li>
-												<li><a href="#">WOMEN JEWELRY</a>
-													<ul>
-														<li><a href="shop.html">necklace </a></li>
-														<li><a href="shop.html">chunky short striped</a></li>
-														<li><a href="shop.html">samhar cuff </a></li>
-														<li><a href="shop.html">nail set</a></li>
-													</ul>
-												</li>											
-											</ul>
-										</li>
-										<li><a href={% url 'contact' %}>Contactanos</a></li>
-									</ul>
-								</nav>
-							</div>					
-						</div>
-					</div>
-				</div>
-			</div>
-			<!-- mobile-menu-area end -->				
+			{% include 'navbars/navbar.html' %}
 		</header>
 		<!-- header end -->
 		<!-- breadcrumb-area start -->
@@ -181,76 +68,65 @@
         <div class="row">
             <div class="col-md-12 col-sm-12 col-xs-12">
                 <form action="#" method="post">
-                    {% csrf_token %}
-                    <div class="table-content table-responsive">
+					<div id="board">
+						{% csrf_token %}
+                    	{% if items %}
 						{% for item in items %}
-									<div class="container2">
-										<a href="#"><img alt="" src="{{ item.producto.imagen.url }}" width="70px" ></a>
-										<p class="Titulo">{{item.producto.nombre}}</p>
-										<p class="descripcion">{{item.producto.descripcion}}</p>
-										<p class="descripcion">{{item.producto.precio}} x {{item.cantidad}}</p>
-										<p><a href="{% url 'quitar_del_carrito' item.producto.id %}">Eliminar</a></p>
-									</div>
+						<div class="container2">
+							<div class="imgP"><img alt="" src="{{ item.producto.imagen.url }}" width="70px" height="auto"></div>
+							<div class="Titulo"><p>{{item.producto.nombre}}</p></div>
+							<div class="descripcion"><p>{{item.producto.descripcion}}</p></div>
+							<div class="descripcion2">
+								<p>{{item.producto.precio_con_iva}}$ COP   x <b class="cantidad">{{item.cantidad}}</b></p>
+							</div>
+                            <div class="cant">
+                                <form method="post" style="display:inline;">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="producto_id" value="{{ item.producto.id }}">
+                                    <input type="hidden" name="accion" value="aumentar">
+                                    <button style="border-bottom: 1px solid rgb(196, 196, 196);">
+                                        <i class="fa-solid fa-plus"></i>
+                                    </button>
+                                </form>
+                                <form method="post" style="display:inline;">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="producto_id" value="{{ item.producto.id }}">
+                                    <input type="hidden" name="accion" value="disminuir">
+                                    <button>
+                                        <i class="fa-solid fa-minus"></i>
+                                    </button>
+                                </form>
+                        </div>
+							<a href="{% url 'quitar_del_carrito' item.producto.id %}"><bottom class="eliminar"><i class="fa-solid fa-trash-can"></i></button></a>
+						</div>
+						
 						{% endfor %}
-                                
+						{% else %}
+						<h1>No hay productos agregados en el carrito</h1>
+                        {% endif %}
+					</div>
 						<br><br>
-                    </div>
-					<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-					<script>
-						$(document).ready(function () {
-							$('input[name^="cantidad-"]').on('change', function () {
-								var itemId = $(this).attr('name').split('-')[1];
-								var nuevaCantidad = parseInt($(this).val());
-					
-								$.ajax({
-									url: '{% url "actualizar_carrito" %}',
-									method: 'POST',
-									data: {
-										'itemId': itemId,
-										'cantidad': nuevaCantidad,
-										'csrfmiddlewaretoken': '{{ csrf_token }}'
-									},
-									success: function (data) {
-										if ('subtotal' in data && 'total' in data) {
-											// Actualizar el subtotal en la interfaz
-											$('#subtotal-' + itemId).text(data.subtotal);
-											
-											// Actualizar el total en el formulario
-											$('#total').text(data.total);
-
-											$('#subtotal2').text(data.total)
-										} else if ('error' in data) {
-											console.error(data.error);
-										}
-									},
-									error: function (error) {
-										console.error('Error:', error);
-									}
-								});
-							});
-						});
-					</script>
 					
                     <div class="row">
-                        <div class="col-md-8 col-sm-7 col-xs-12">
+                        <div class="col-md-8 col-sm-7">
                             <div class="buttons-cart">
                                 <input type="submit" value="Actualizar Carro" />
                                 <a href="{% url 'shop' %}">Continuar Comprando</a>
                             </div>
                         </div>
-                        <div class="col-md-4 col-sm-5 col-xs-12">
+                        <div class="col-md-4 col-sm-5">
                             <div class="cart_totals">
-                                <h2>Totales Compra</h2><br>
+                                <h2>Total Compra</h2><br>
                                 <table>
                                     <tbody>
                                         <tr class="cart-subtotal">
                                             <th >Subtotal</th>
-                                            <td><span class="amount" id="subtotal2">${{ total }}</span></td>
+                                            <td><span class="amount" id="subtotal2">$ {{ total }} COP</span></td>
                                         </tr>
                                         <tr class="order-total">
                                             <th >Total</th>
                                             <td>
-                                                <strong><span class="amount" id="total">${{ total }}</span></strong>
+                                                <strong><span class="amount" id="total">${{ total }} COP </span></strong>
                                             </td>
                                         </tr>
                                     </tbody>
@@ -271,59 +147,7 @@
 		
 		<!-- footer start -->
 		<footer>
-			<div class="footer-top">
-				<div class="container">
-					<div class="row">
-						<div class="col-md-12">
-							<div class="footer-logo">
-								<img src="img/logo-white-text.png" alt="" />
-								<p>🫣 Encuentra tu estilo, siéntete imparable y conquista el mundo con cada atuendo. ¡Tu ropa, tu historia, tu poder! ✌️</p>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-			<!-- footer-top-area start -->
-			<div class="footer-top-area">
-				<div class="container">
-					<div class="row">
-						<!-- footer-widget start -->
-						<div class="col-lg-3 col-md-3 col-sm-4">
-							<div class="footer-widget">
-								<h3>CONTACT US</h3>
-								<ul class="footer-contact">
-									<li>
-										<i class="fa fa-envelope"> </i>	
-										Email: admin@BasicTheme.com
-									</li>
-									<li>
-										<i class="fa fa-phone"> </i>
-										Phone: +123 455657589
-									</li>
-								</ul>
-							</div>
-						</div>
-						<!-- footer-widget end -->											
-					</div>
-				</div>
-			</div>
-			<!-- footer-top-area end -->
-			<!-- footer-bottom-area start -->
-			<div class="footer-bottom-area">
-				<div class="container">
-					<div class="row">
-						<div class="col-lg-6 col-md-6 col-sm-6">
-							<div class="copyright">
-								<p>Copyright © <a href="#">Pabna</a>. All Rights Reserved</p>
-							</div>
-						</div>
-						<div class="col-lg-6 col-md-6 col-sm-6">
-							
-						</div>
-					</div>
-				</div>
-			</div>
-			<!-- footer-bottom-area end -->			
+			{% include 'footer/footer.html'%}
 		</footer>
 		<!-- footer end -->
 		

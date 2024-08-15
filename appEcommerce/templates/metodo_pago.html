@@ -1,0 +1,56 @@
+{% load static %}
+<html>
+<head>
+    <title>Metodo De Pago</title>
+    <script src="https://sdk.mercadopago.com/js/v2"></script>
+    <link rel="shortcut icon" type="image/x-icon" href={% static 'img/favicon/prueba.png' %}>
+    <link rel="stylesheet" href={% static 'css/style.css' %}>
+    <link rel="stylesheet" href={% static 'css/style_pago.css' %}>
+</head>
+<body>
+  <!--Navbar inicio-->
+    <header class="header-pos">
+      {% include 'navbars/navbar.html' %}
+    </header>
+  <!--Navbar Fin-->
+
+    <!--Boton De Pago Inicio-->
+    <div class="container_pago">
+        <h1>Metodos De Pago</h1><br>
+        <div id="wallet_container">
+        </div>
+        <a href="{% url 'check' %}">Volver</a>
+    </div>
+    <!--Boton De Pago Fin-->
+
+    <!-- footer start -->
+		<footer>
+			{% include 'footer/footer.html'%}
+		</footer>
+		<!-- footer end -->
+
+    <!--Script Mercado Pago-->
+    <script>
+      const mp = new MercadoPago('APP_USR-e392ee13-bd2a-4ebb-8df5-dff6fa4305c3', {
+        locale: 'es-CO'
+      });
+    
+      const settings = {
+        customization: {
+          visual: {
+            buttonBackground: 'default',
+            borderRadius: '16px',
+            horizontalPadding:'200px'
+          },
+        },
+        initialization: {
+          preferenceId: "{{ preference_id }}",
+          redirectMode: "blank",
+        },
+      }
+    
+      mp.bricks().create("wallet", "wallet_container", settings);
+    </script>
+    
+</body>
+</html>

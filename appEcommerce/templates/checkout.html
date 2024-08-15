@@ -8,7 +8,7 @@
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <link rel="shortcut icon" type="image/x-icon" href="{% static 'img/favicon' %}">
+        <link rel="shortcut icon" type="image/x-icon" href={% static 'img/favicon/prueba.png' %}>
         <!-- Place favicon.ico in the root directory -->
 
 
@@ -42,123 +42,8 @@
         <!-- Add your site or application content here -->
 		
 		<!-- header start -->
-        <header class="header-pos">
-			<!-- header-bottom-area start -->
-			<div class="header-bottom-area">
-				<div class="container">
-					<div class="inner-container">
-						<div class="row">
-							<div class="col-md-2 col-sm-4 col-xs-5">
-								<div class="logo">
-									<a href="index.html"><img src="img/logo-white-text.png" alt="" /></a>
-								</div>
-							</div>
-							<div class="col-md-8 hidden-xs hidden-sm">
-								<div class="main-menu">
-									<nav>
-										<ul>
-											<li class="static"><a href={% url 'shop' %}>Catalogo</a>
-											</li>
-											<li><a href={% url 'shop' %}>Categorias</a>
-												<div class="mega-menu mega-menu-2">
-													<span>
-														<a href="shop.html" class="mega-title">Ropa Para Mujer </a>
-														<a href="shop.html">...</a>
-														<a href="shop.html">...</a>
-														<a href="shop.html">...</a>
-														<a href="shop.html">...</a>
-													</span>
-													<span>
-														<a href="shop.html" class="mega-title">Ropa Para Hombre </a>
-														<a href="shop.html">...</a>
-														<a href="shop.html">...</a>
-														<a href="shop.html">...</a>
-														<a href="shop.html">...</a>
-													</span>
-													<span class="mega-menu-img">
-														<a href="shop.html"><img alt="" src="img/1.jpg"></a>
-													</span>
-												</div>
-											</li>
-											<li><a href={% url 'contact' %}>contactanos</a></li>
-										</ul>
-									</nav>
-								</div>
-							</div>
-							<div class="col-md-2 col-sm-8 col-xs-7 header-right">
-								<div class="my-cart">
-									<div class="total-cart">
-										<a href="{% url 'ver_carrito' %}">
-											<i class="fa fa-shopping-cart"></i>
-										</a>
-									</div>
-									<ul>
-										</a>
-									</ul>
-								</div>
-								<div class="user-meta">
-									<a href="#"><i class="fa fa-cog"></i></a>
-									<ul>
-										<li><a href="#">Mi Cuenta</a></li>
-										<li><a href="{% url 'deseos' %}">Lista De Deseos</a></li>
-										<li><a href="{% url 'login_view' %}">Iniciar Sesion / Registro</a></li>
-										<li><a href="{% url 'cerrar_sesion' %}">Cerrar Sesion</a></li>
-
-									</ul>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-			<!-- header-bottom-area end -->
-			<!-- mobile-menu-area start -->
-			<div class="mobile-menu-area visible-xs visible-sm">
-				<div class="container">
-					<div class="row">
-						<div class="col-md-12">
-							<div class="mobile-menu">
-								<nav id="dropdown">
-									<ul>
-										<li><a href="index.html">Home</a>
-										</li>
-										<li><a href="shop.html">Shop</a>
-											<ul>
-												<li><a href="#">WOMEN CLOTH</a>
-													<ul>
-														<li><a href="shop.html">casual shirt</a></li>
-														<li><a href="shop.html">rikke t-shirt</a></li>
-														<li><a href="shop.html">mia top </a></li>
-														<li><a href="shop.html">muscle tee</a></li>
-													</ul>
-												</li>
-												<li><a href="#">MEN CLOTH</a>
-													<ul>
-														<li><a href="shop.html">casual shirt</a></li>
-														<li><a href="shop.html">rikke t-shirt</a></li>
-														<li><a href="shop.html">mia top </a></li>
-														<li><a href="shop.html">muscle tee</a></li>
-													</ul>
-												</li>
-												<li><a href="#">WOMEN JEWELRY</a>
-													<ul>
-														<li><a href="shop.html">necklace </a></li>
-														<li><a href="shop.html">chunky short striped</a></li>
-														<li><a href="shop.html">samhar cuff </a></li>
-														<li><a href="shop.html">nail set</a></li>
-													</ul>
-												</li>											
-											</ul>
-										</li>
-										<li><a href="contact.html">Contact</a></li>
-									</ul>
-								</nav>
-							</div>					
-						</div>
-					</div>
-				</div>
-			</div>
-			<!-- mobile-menu-area end -->				
+		<header class="header-pos">
+			{% include 'navbars/navbar.html' %}
 		</header>
 		<!-- header end -->
 		<!-- breadcrumb-area start -->
@@ -179,63 +64,12 @@
 			</div>
 		</div>
 		<!-- breadcrumb-area end -->
-		<!-- coupon-area start -->
-		<div class="coupon-area">
-			<div class="container">
-				<div class="row">
-					<div class="col-md-6">
-						<div class="coupon-accordion">
-							<!-- ACCORDION START -->
-							<h3>Necesitas Loguearte? <span id="showlogin">Haz Click Aqui</span></h3>
-							<div id="checkout-login" class="coupon-content">
-								<div class="coupon-info">
-									<form action="#">
-										<p class="form-row-first">
-											<label>Correo <span class="required">*</span></label>
-											<input type="text" />
-										</p>
-										<p class="form-row-last">
-											<label>Contraseña  <span class="required">*</span></label>
-											<input type="text" />
-										</p>
-										<p class="form-row">					
-											<input type="submit" value="Login" />
-										</p>
-										<p class="lost-password">
-											<a href="#">Olvidaste La Contraseña?</a>
-										</p>
-									</form>
-								</div>
-							</div>
-							<!-- ACCORDION END -->						
-						</div>
-					</div>
-					<div class="col-md-6">
-						<div class="coupon-accordion">	
-							<!-- ACCORDION START -->
-							<h3>Tienes Un Cupon De Descuento? <span id="showcoupon">Haz Click Aqui Para Canjearlo</span></h3>
-							<div id="checkout_coupon" class="coupon-checkout-content">
-								<div class="coupon-info">
-									<form action="#">
-										<p class="checkout-coupon">
-											<input type="text" placeholder="Coupon code" />
-											<input type="submit" value="Apply Coupon" />
-										</p>
-									</form>
-								</div>
-							</div>
-							<!-- ACCORDION END -->						
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-		<!-- coupon-area end -->		
 		<!-- checkout-area start -->
 		<div class="checkout-area">
 			<div class="container">
 				<div class="row">
-					<form action="#" autocomplete="off">
+					<form action="{% url 'detalles_venta' %}" method="POST" autocomplete="off">
+						{% csrf_token %}
 						<div class="col-lg-6 col-md-6">
 							<div class="checkbox-form">						
 								<h3>Detalles Del Usuario</h3>
@@ -245,38 +79,52 @@
 									<div class="col-md-6">
 										<div class="checkout-form-list">
 											<label>Nombre <span class="required">*</span></label>										
-											<input type="text" placeholder="Escribe Tu Nombre" required/>
+											<input type="text" name="name_user" placeholder="Escribe Tu Nombre" required/>
 										</div>
 									</div>
 									<div class="col-md-6">
 										<div class="checkout-form-list">
 											<label>Apellido <span class="required">*</span></label>										
-											<input type="text" placeholder="Escribe Tu Apellido" required/>
+											<input type="text" name="apellido_user" placeholder="Escribe Tu Apellido" required/>
 										</div>
 									</div>
 									<div class="col-md-12">
 										<div class="checkout-form-list">
-											<label>Nombre De La Compañia</label>
-											<input type="text" placeholder="Escribe Tu Empresa (Opcional)" required/>
+											<label>Tipo De Documento <span class="required">*</span></label>
+											<select class="form-select" name="tipo_documento" required>
+												<option value="CC">Cedula De Ciudadania</option>
+												<option value="CE">Cedula De Extranjeria</option>
+												<option value="NIT">Numero De Identificacion Tributaria</option>
+												<option value="RUT">Registro Unico Tributario</option>
+												<option value="TI">Tarjeta De Identidad</option>
+												<option value="DNI">Documento Nacional De Identidad</option>
+												<option value="PAS">Pasaporte</option>
+											</select>
+										</div>
+									</div>
+									<div class="col-md-12">
+										<div class="checkout-form-list">
+											<label>Numero De Documento <span class="required">*</span></label>
+											<input type="text" name="numero_documento" placeholder="Escribe Tu Numero De Documento" required/>
 										</div>
 									</div>
 									<div class="col-md-12">
 										<div class="checkout-form-list">
 											<label>Direccion <span class="required">*</span></label>
-											<input type="text" placeholder="Escribe Tu Direccion" required/>
+											<input type="text" name="direccion_user" placeholder="Escribe Tu Direccion" required/>
 										</div>
 									</div>
 									
 									<div class="col-md-6">
 										<div class="checkout-form-list">
 											<label>Correo <span class="required">*</span></label>										
-											<input type="email" placeholder="Escribe Tu Correo" required/>
+											<input type="email" name="email_user" placeholder="Escribe Tu Correo" value="{{email}}" required/>
 										</div>
 									</div>
 									<div class="col-md-6">
 										<div class="checkout-form-list">
 											<label>Numero De Celular  <span class="required">*</span></label>										
-											<input type="text" placeholder="Numero De Celular" required/>
+											<input type="text" name="celular_user" placeholder="Numero De Celular" required/>
 										</div>
 									</div>
 									
@@ -284,8 +132,7 @@
 								<div class="different-address">
 										<div class="ship-different-title">
 											<h3>
-												<label>Alguna Descripcion Sobre Tu Direccion?</label>
-												
+												<label>Alguna Descripcion Sobre Tu Direccion? (Opcional)</label>
 											</h3>
 										</div>
 									<div id="ship-box-info" class="row">
@@ -378,9 +225,15 @@
 											<tr class="cart_item">
 												<td class="product-name">
 													{{ item.producto.nombre }} <strong class="product-quantity"> × {{item.cantidad}}</strong>
+													<input type="hidden" name="id_producto" value="{{item.producto.id}}">
+													<input type="hidden" name="nombre_producto" value="{{ item.producto.nombre }}">
+													<input type="hidden" name="cantidad_producto" value="{{ item.cantidad }}">
+													<input type="hidden" name="precio_producto" value="{{ item.producto.precio }}">
+													<input type="hidden" name="descripcion_producto" value="{{ item.producto.descripcion }}">
 												</td>
 												<td class="product-total">
-													<span class="amount">$ {{ item.producto.precio }}</span>
+													<span class="amount">$ {{ item.producto.precio_con_iva }} COP</span>
+													
 												</td>
 											</tr>
 											{% endfor %}	
@@ -388,12 +241,12 @@
 										<tfoot>
 											<tr class="cart-subtotal">
 												<th>Subtotal</th>
-												<td><span class="amount">{{total}}</span></td>
+												<td><span class="amount">$ {{ total }} COP</span></td>
 											</tr>
 											
 											<tr class="order-total">
 												<th>Total</th>
-												<td><strong><span class="amount">{{total}}</span></strong>
+												<td><strong><span class="amount">$ {{ total }} COP</span></strong>
 												</td>
 											</tr>	
 																	
@@ -401,10 +254,8 @@
 									</table>
 									
 								</div>
-								
-																
 									<div class="order-button-payment">
-										<input type="submit" value="Ordena Ahora!" />
+										<input type="submit" value="Ordena Ahora !!" />
 									</div>
 								</div>
 							</div>
@@ -418,65 +269,7 @@
 		
 		<!-- footer start -->
 		<footer>
-			<div class="footer-top">
-				<div class="container">
-					<div class="row">
-						<div class="col-md-12">
-							<div class="footer-logo">
-								<img src={% static 'img/logo-white-text.png' %} alt="" />
-								<p></p>
-								
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-			<!-- footer-top-area start -->
-			<div class="footer-top-area">
-				<div class="container">
-					<div class="row">
-						<!-- footer-widget start -->
-						<div class="col-lg-3 col-md-3 col-sm-4">
-							<div class="footer-widget">
-								<h3>CONTACT US</h3>
-								<ul class="footer-contact">
-									<li>
-										<i class="fa fa-envelope"> </i>
-										Email: admin@BasicTheme.com
-									</li>
-									<li>
-										<i class="fa fa-phone"> </i>
-										Phone: +123 455657589
-									</li>
-								</ul>
-							</div>
-						</div>
-						<!-- footer-widget end -->
-						
-					</div>
-				</div>
-			</div>
-			<!-- footer-top-area end -->
-			<!-- footer-bottom-area start -->
-			<div class="footer-bottom-area">
-				<div class="container">
-					<div class="row">
-						<div class="col-lg-6 col-md-6 col-sm-6">
-							<div class="copyright">
-								<p>Copyright © <a href="#">Pabna</a>. All Rights Reserved</p>
-								<div class="payment-img">
-									<img src={% static 'img/paypal.png' %} width="40px" height="40px">
-									<img src={% static 'img/tarjeta.png' %} width="40px" height="40px">
-									<img src={% static 'img/nequi.svg' %} width="40px" height="40px">
-								</div>
-							</div>
-							
-						</div>
-						
-					</div>
-				</div>
-			</div>
-			<!-- footer-bottom-area end -->
+			{% include 'footer/footer.html'%}
 		</footer>
 		<!-- footer end -->
 		

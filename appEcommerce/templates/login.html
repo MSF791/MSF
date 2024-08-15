@@ -8,7 +8,7 @@
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <link rel="shortcut icon" type="image/x-icon" href={% static 'img/favicon.ico' %}>
+        <link rel="shortcut icon" type="image/x-icon" href={% static 'img/favicon/prueba.png' %}>
         <!-- Place favicon.ico in the root directory -->
 
 		<!-- all css here -->
@@ -31,6 +31,7 @@
 		<!-- responsive css -->
         <link rel="stylesheet" href={% static 'css/responsive.css' %}>
 		<!-- modernizr js -->
+		<link rel="stylesheet" href={% static 'css/login.css' %}>
         <script src={% static 'js/vendor/modernizr-2.8.3.min.js' %}></script>
     </head>
     <body>
@@ -41,151 +42,8 @@
         <!-- Add your site or application content here -->
 		
 		<!-- header start -->
-        <header class="header-pos">
-			<!-- header-bottom-area start -->
-			<div class="header-bottom-area">
-				<div class="container">
-					<div class="inner-container">
-						<div class="row">
-							<div class="col-md-2 col-sm-4 col-xs-5">
-								<div class="logo">
-									<a href="index.html"><img src="img/logo-white-text.png" alt="" /></a>
-								</div>
-							</div>
-							<div class="col-md-8 hidden-xs hidden-sm">
-								<div class="main-menu">
-									<nav>
-										<ul>
-											<li class="static"><a href={% url 'shop' %}>Catalogo</a>
-											</li>
-											<li><a href={% url 'shop' %}>Categorias</a>
-												<div class="mega-menu mega-menu-2">
-													<span>
-														<a href="shop.html" class="mega-title">Ropa Para Mujer </a>
-														<a href="shop.html">...</a>
-														<a href="shop.html">...</a>
-														<a href="shop.html">...</a>
-														<a href="shop.html">...</a>
-													</span>
-													<span>
-														<a href="shop.html" class="mega-title">Ropa Para Hombre </a>
-														<a href="shop.html">...</a>
-														<a href="shop.html">...</a>
-														<a href="shop.html">...</a>
-														<a href="shop.html">...</a>
-													</span>
-													<span class="mega-menu-img">
-														<a href="shop.html"><img alt="" src="img/1.jpg"></a>
-													</span>
-												</div>
-											</li>
-											<li><a href={% url 'contact' %}>contactanos</a></li>
-										</ul>
-									</nav>
-								</div>
-							</div>
-							<div class="col-md-2 col-sm-8 col-xs-7 header-right">
-								<div class="my-cart">
-									<div class="total-cart">
-										<a href="{% url 'ver_carrito' %}">
-											<i class="fa fa-shopping-cart"></i>
-										</a>
-									</div>
-									<ul>
-										</a>
-									</ul>
-								</div>
-								<div class="user-meta">
-									<a href="#"><i class="fa fa-cog"></i></a>
-									<ul>
-										<li><a href="#">Mi Cuenta</a></li>
-										<li><a href="{% url 'deseos' %}">Lista De Deseos</a></li>
-										<li><a href="{% url 'login_view' %}">Iniciar Sesion / Registro</a></li>
-										<li><a href="{% url 'cerrar_sesion' %}">Cerrar Sesion</a></li>
-									</ul>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-			<!-- header-bottom-area end -->
-			<!-- mobile-menu-area start -->
-			<div class="mobile-menu-area visible-xs visible-sm">
-				<div class="container">
-					<div class="row">
-						<div class="col-md-12">
-							<div class="mobile-menu">
-								<nav id="dropdown">
-									<ul>
-										<li><a href="/">Inicio</a>
-											<ul>
-												<li><a href="index.html">Homepage Version 1</a></li>
-												<li><a href="index-2.html">Homepage Version 2</a></li>
-												<li><a href="index-3.html">Homepage Version 3</a></li>
-											</ul>
-										</li>
-										<li><a href="about.html">About</a></li>
-										<li><a href="blog.html">blog</a></li>
-										<li><a href="shop.html">Shop</a>
-											<ul>
-												<li><a href="#">WOMEN CLOTH</a>
-													<ul>
-														<li><a href="shop.html">casual shirt</a></li>
-														<li><a href="shop.html">rikke t-shirt</a></li>
-														<li><a href="shop.html">mia top </a></li>
-														<li><a href="shop.html">muscle tee</a></li>
-													</ul>
-												</li>
-												<li><a href="#">MEN CLOTH</a>
-													<ul>
-														<li><a href="shop.html">casual shirt</a></li>
-														<li><a href="shop.html">rikke t-shirt</a></li>
-														<li><a href="shop.html">mia top </a></li>
-														<li><a href="shop.html">muscle tee</a></li>
-													</ul>
-												</li>
-												<li><a href="#">WOMEN JEWELRY</a>
-													<ul>
-														<li><a href="shop.html">necklace </a></li>
-														<li><a href="shop.html">chunky short striped</a></li>
-														<li><a href="shop.html">samhar cuff </a></li>
-														<li><a href="shop.html">nail set</a></li>
-													</ul>
-												</li>											
-											</ul>
-										</li>
-										<li><a href="shop.html">Footwear </a></li>
-										<li><a href="#">Pages</a>
-											<ul>
-												<li><a href="about.html">about</a></li>
-												<li><a href="blog.html">blog</a></li>
-												<li><a href="blog-2-column.html">blog 2 column</a></li>
-												<li><a href="blog-full-width.html">blog full width</a></li>
-												<li><a href="blog-right-sidebar.html">blog right sidebar</a></li>
-												<li><a href="single-blog.html">single blog</a></li>
-												<li><a href="single-blog-video.html">single blog video</a></li>
-												<li><a href="cart.html">shopping cart</a></li>
-												<li><a href="checkout.html">checkout</a></li>
-												<li><a href="wishlist.html">wishlist</a></li>
-												<li><a href="contact.html">contact</a></li>
-												<li><a href="login.html">login</a></li>
-												<li><a href="shop.html">shop</a></li>
-												<li><a href="product-details.html">product details</a></li>
-												<li><a href="shop-full-width.html">shop full width</a></li>
-												<li><a href="shop-right-sidebar.html">shop right sidebar</a></li>
-												<li><a href="404.html">404 error</a></li>
-											</ul>
-										</li>
-										<li><a href="contact.html">Contact</a></li>
-									</ul>
-								</nav>
-							</div>					
-						</div>
-					</div>
-				</div>
-			</div>
-			<!-- mobile-menu-area end -->				
+		<header class="header-pos">
+			{% include 'navbars/navbar.html' %}
 		</header>
 		<!-- header end -->
 		<!-- breadcrumb-area start -->
@@ -223,45 +81,92 @@
         setTimeout(function(){
             miAlerta.classList.add('fade');
             miAlerta.classList.remove('show');
-        }, 5000);
+        }, 8000);
     </script>
 {% endif %}
+
+		<!-- Mostrar errores del formulario -->
+		{% if form.errors %}
+		<div class="alert alert-danger" role="alert" id="miAlerta">
+			<ul>
+				{% for field in form %}
+					{% if field.errors %}
+						{% for error in field.errors %}
+							<li><strong>{{ field.label }}:</strong> {{ error }}</li>
+						{% endfor %}
+					{% endif %}
+				{% endfor %}
+			</ul>
+		</div>
+		{% endif %}
+
 		
 		<div class="login-area">
-			<div class="container">
-				<div class="row">
-					<div class="col-md-6">
-						<div class="login-content">
-							<h2 class="login-title">Iniciar Sesion</h2>
-							<form method="post" action="{% url 'iniciar_sesion' %}">
-								{% csrf_token %}
-								<label for="id_correo">Nombre De Usuario</label>
-								<input type="text" name="usuario" id="id_correo" required/>
-		
-								<label for="id_password">Contraseña</label>
-								<input type="password" name="contrasena" id="id_password" required/>
-		
-								<div class="login-lost">
-									<span class="forgot-login">
-										<a href="{% url 'password' %}">¿Olvidaste la Contraseña?</a>
-									</span>
-								</div>
-								<input class="login-sub" type="submit" value="Iniciar Sesión" />
-							</form>
+			<div class="containerL" id="container">
+				<div class="form-container sign-up">
+					<form method="post" action="{% url 'registrar_usuario' %}" autocomplete="off">
+						{% csrf_token %}
+						<h1 class="titleLogin">Crea una cuenta</h1>
+						<div class="inputLogin">
+							<label><p>Nombre de usuario:</p></label>
+							<input type="text" name="username" id="id_correo" required placeholder="Nombre de usuario">
+							<h6>Requerido. 150 caracteres como maximo. Únicamente letras, digitos y @/./+//-/_</h6>
 						</div>
-					</div>
-					<div class="col-md-6">
-						<div class="login-content login-margin">
-							<h2 class="login-title">¿No tienes Una Cuenta?</h2>
-							<p class="mensaje2">Crea Una Aqui.</p>
-							<form method="post" action="{% url 'registrar_usuario' %}">
-								{% csrf_token %}
-                				{{ form.as_p }}
-								<input class="login-sub" type="submit" value="Registrarse" />
-							</form>
-							<div class="sign-up-today">
-								<h2 class="login-title">Accederas a muchos beneficios!</h2>
-							</div>							
+						<div class="rowInput">
+							<div class="inputLogin inputRow">
+								<label><p>Email:</p></label>
+								<input type="email" name="email" id="id_correo" required placeholder="Email">
+							</div>
+							<div class="inputLogin">
+								<label><p>Contraseña:</p></label>
+								<input type="password" name="password1" id="id_correo" required placeholder="Contraseña">
+							</div>
+						</div>
+						<div class="inputLogin">
+							<label><p>Contraseña (confirmacion):</p></label>
+							<input type="password" name="password2" id="id_correo" required placeholder="Validar contraseña">
+							<h6>Para verificar, introduzca la misma contraseña anterior.</h6>
+						</div>
+						<button>registrarse</button>
+					</form>
+				</div>
+				<div class="form-container sign-in">
+					<form method="post" action="{% url 'iniciar_sesion' %}" autocomplete="off">
+						{% csrf_token %}
+						<b><h1 class="titleLogin">Inicia Sesión</h1></b>
+						<div class="inputLogin">
+							<label><p>Nombre de usuario:</p></label>
+							<input type="text" name="usuario" id="id_correo" required placeholder="Nombre de usuario">
+						</div>
+						<div class="inputLogin">
+							<label><p>Contraseña:</p></label>
+							<input type="password" name="contrasena" id="id_password" required placeholder="Contraseña">
+						</div>
+						<a href="{% url 'password' %}">¿Olvidaste tu contraseña?</a>
+						<button>Ingresar</button>
+					</form>
+				</div>
+				<div class="toggle-container">
+					<div class="toggle">
+						<div class="toggle-panel toggle-left">
+							<div class="maxWidth">
+								<b><h1 class="titleToggle">¡Bienvenid@!</h1></b>
+								<p>Si ya tienes cuenta inicia sesion aqui para poder disfrutar de nuestros sevicios 😉🔑</p>
+								<button class="hiddenL" id="login">Iniciar sesion</button>
+							</div>
+							<div class="minWindth">
+								<button class="hiddenLM" id="login2"><i class="fa-solid fa-key"></i></button>
+							</div>
+						</div>
+						<div class="toggle-panel toggle-right">
+							<div class="maxWidth">
+								<b><h1 class="titleToggle">¿Aun no tienes cuenta?</h1></b>
+								<p>Regístrate con tus datos personales para utilizar todas las funciones de nuestro sitio!! 😃👇</p>
+								<button class="hiddenL" id="register">Registrate</button>
+							</div>
+							<div class="minWindth">
+								<button class="hiddenLM" id="register2"><i class="fa-solid fa-user-plus"></i></button>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -271,65 +176,7 @@
 		
 		<!-- footer start -->
 		<footer>
-			<div class="footer-top">
-				<div class="container">
-					<div class="row">
-						<div class="col-md-12">
-							<div class="footer-logo">
-								<img src={% static 'img/logo-white-text.png' %} alt="" />
-								<p>🫣 Encuentra tu estilo, siéntete imparable y conquista el mundo con cada atuendo. ¡Tu ropa, tu historia, tu poder! ✌️</p>
-								
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-			<!-- footer-top-area start -->
-			<div class="footer-top-area">
-				<div class="container">
-					<div class="row">
-						<!-- footer-widget start -->
-						<div class="col-lg-3 col-md-3 col-sm-4">
-							<div class="footer-widget">
-								<h3>CONTACT US</h3>
-								<ul class="footer-contact">
-									<li>
-										<i class="fa fa-envelope"> </i>
-										Email: admin@BasicTheme.com
-									</li>
-									<li>
-										<i class="fa fa-phone"> </i>
-										Phone: +123 455657589
-									</li>
-								</ul>
-							</div>
-						</div>
-						<!-- footer-widget end -->
-						
-					</div>
-				</div>
-			</div>
-			<!-- footer-top-area end -->
-			<!-- footer-bottom-area start -->
-			<div class="footer-bottom-area">
-				<div class="container">
-					<div class="row">
-						<div class="col-lg-6 col-md-6 col-sm-6">
-							<div class="copyright">
-								<p>Copyright © <a href="#">Pabna</a>. All Rights Reserved</p>
-								<div class="payment-img">
-									<img src={% static 'img/paypal.png' %} width="40px" height="40px">
-									<img src={% static 'img/tarjeta.png' %} width="40px" height="40px">
-									<img src={% static 'img/nequi.svg' %} width="40px" height="40px">
-								</div>
-							</div>
-							
-						</div>
-						
-					</div>
-				</div>
-			</div>
-			<!-- footer-bottom-area end -->
+			{% include 'footer/footer.html'%}
 		</footer>
 		<!-- footer end -->
 		
@@ -371,5 +218,6 @@
         <script src={% static 'js/plugins.js' %}></script>
 		<!-- main js -->
         <script src={% static 'js/main.js' %}></script>
+		<script src={% static 'js/login.js' %}></script>
     </body>
 </html>
