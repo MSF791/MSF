@@ -92,7 +92,23 @@
             </div>
         </div>
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script>
+            $(document).ready(function(){
+                // Función para desplazar el scroll al final del contenedor de mensajes
+                function scrollToBottom() {
+                    var div = document.getElementById("board");
+                    div.scrollTop = div.scrollHeight - div.clientHeight;
+                }
+        
+                // Llamar a la función al cargar la página
+                scrollToBottom();
+        
+                // Llamar a la función después de enviar un mensaje
+                $("#chat-box").submit(function() {
+                    scrollToBottom();
+                });
+            });
             $(document).ready(function(){
                 // Función para desplazar el scroll al final del contenedor de mensajes
                 function scrollToBottom() {
@@ -112,5 +128,8 @@
         <script src={% static 'js/chatResponsive.js' %}></script>
         
         
+        
+        
 </body>
 </html>
+

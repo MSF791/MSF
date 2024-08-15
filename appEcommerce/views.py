@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.http import JsonResponse,HttpResponseNotFound,HttpResponseBadRequest
+from django.http import JsonResponse,HttpResponseNotFound,HttpResponseBadRequest,HttpResponseNotFound,HttpResponseBadRequest
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -12,6 +12,7 @@ from django.http import HttpResponseRedirect
 from rest_framework.parsers import JSONParser
 from .serializers import MessageSerializer
 from django.core.paginator import Paginator
+from django.db.models import Q
 from django.db.models import Q
 import logging
 import mercadopago
@@ -541,25 +542,33 @@ def reset_password(request, token, email):
 def chat_view(request):
     if not request.user.is_authenticated:
         return redirect('login_view')
-
-    query = request.GET.get('q')
-
-    if query:
-        users = User.objects.filter(username__icontains=query).exclude(pk=request.user.pk)
-    else:
-        users = User.objects.exclude(pk=request.user.pk)
-
-    return render(request, 'chat.html', {'users': users, 'query': query})
-
+    if request.method == "GET":
+        return render(request, 'chat.html',
+                      {'users': User.objects.exclude(username=request.user.username)})
     
-@csrf_exempt
-def message_view(request, sender=None, receiver=None):
+def message_view(request, sender, receiver):
     if not request.user.is_authenticated:
         return redirect('login_view')
+    if request.method == "GET":
+        return render(request, "messages.html",
+                      {'users': User.objects.exclude(username=request.user.username),
+                       'receiver': User.objects.get(id=receiver),
+                       'messages': Message.objects.filter(sender_id=sender, receiver_id=receiver) |
+                                   Message.objects.filter(sender_id=receiver, receiver_id=sender)})
     
-    print('este debe ser el que recibe el mensaje',receiver)
-
+@csrf_exempt
+def message_list(request, sender=None, receiver=None):
+    """
+    List all required messages, or create a new message.
+    """
     if request.method == 'GET':
+        messages = Message.objects.filter(
+            Q(sender_id=sender, receiver_id=receiver) | Q(sender_id=receiver, receiver_id=sender),
+            is_read=False
+        )
+
+        return render(request, 'chat.html', {'messages': messages, 'sender': sender, 'receiver': receiver, 'users': User.objects.exclude(username=request.user.username)})
+
         messages = Message.objects.filter(
             Q(sender_id=sender, receiver_id=receiver) | Q(sender_id=receiver, receiver_id=sender),
             is_read=False
@@ -569,140 +578,11 @@ def message_view(request, sender=None, receiver=None):
 
 
     elif request.method == 'POST':
-        # Establecer el valor de receiver antes de validar el formulario
-        request.POST._mutable = True
-        request.POST['receiver'] = receiver
-        request.POST._mutable = False
-
-        form = MessageForm(request.POST)
-        if form.is_valid():
-            # Guardar el mensaje si el formulario es válido
-            form.save()
-            messages = Message.objects.filter(
-            Q(sender_id=sender, receiver_id=receiver) | Q(sender_id=receiver, receiver_id=sender),
-            is_read=False
-            )
-           # Redirige a la misma vista (GET) para evitar reenvío del formulario POST
-            return redirect('chat', sender=sender, receiver=receiver)
-        else:
-            # Imprimir errores del formulario
-            print(form.errors)
-            print(request.POST)  # Imprimir los datos POST recibidos para depuración
-                
-        return render(request, 'chat.html', {'sender': sender, 'receiver': receiver, 'users': User.objects.exclude(username=request.user.username)})
-
-def chat_style(request):
-    return render(request,'chat_estilo.html')
-
-def calcular_precios_con_iva(precios, tasa_iva=0.19):
-    precios_con_iva = []
-    for precio in precios:
-        precio_sin_iva = int(precio)  # Convierte a flotante
-        iva = precio_sin_iva * tasa_iva
-        precio_con_iva = precio_sin_iva + iva
-        precios_con_iva.append(precio_con_iva)
-    return precios_con_iva
-
-import re
-
-def parse_address(address):
-    # Expresión regular para dividir la dirección
-    pattern = r'^(.*?)(?:#|N°|No.|No|Num\.|Num|nº|n°)\s*(\d+)\s*(?:-|–)?\s*(\d+)?'
-    
-    match = re.match(pattern, address.strip())
-    
-    if match:
-        street_name = match.group(1).strip()  # Obtén el nombre de la calle
-        street_number = match.group(2).strip()  # Obtén el número de la calle
-        zip_code = match.group(3).strip() if match.group(3) else "000000"  # Código postal por defecto si no está presente
-        
-        return {
-            "street_name": street_name,
-            "street_number": int(street_number),
-            "zip_code": zip_code
-        }
-    else:
-        raise ValueError("No se pudo analizar la dirección")
-
-
-def detalles_venta(request):
-    sdk = mercadopago.SDK("APP_USR-4870740275006288-080115-2e0e446617e6d07ee756aea1514241b6-1928046362")
-    if request.method == 'POST':
-        nombre_user = request.POST.get('name_user')
-        apellido_user = request.POST.get('apellido_user')
-        direccion_user = request.POST.get('direccion_user')
-        email_user = request.POST.get('email_user')
-        celular_user = request.POST.get('celular_user')
-        tipo_documento = request.POST.get('tipo_documento')
-        numero_documento = request.POST.get('numero_documento')
-        print(numero_documento)
-
-        nombres_productos = request.POST.getlist('nombre_producto')
-        id_productos = request.POST.getlist('id_producto')
-        cantidad_productos = request.POST.getlist('cantidad_producto')
-        precio_productos = request.POST.getlist('precio_producto')
-        descripcion_productos = request.POST.getlist('descripcion_producto')
-        items = []
-        # Calcula y formatea los precios con IVA
-        precios_con_iva = calcular_precios_con_iva(precio_productos)
-        direccion_parser = parse_address(direccion_user)
-
-        for i in range(len(nombres_productos)):
-             # Elimina las comas para convertir el precio a float
-            items.append({
-                "id": f"item-ID-{id_productos[i]}",
-                "title": nombres_productos[i],
-                "currency_id": "COP",
-                "picture_url": '',
-                "description": f"{descripcion_productos[i]}",
-                "category_id": "fashion",
-                "quantity": int(cantidad_productos[i]),
-                "unit_price": int(precios_con_iva[i]),
-            })
-        preference_data = {
-            "items":items,
-            "payer": {
-                "name": nombre_user,
-                "surname": apellido_user,
-                "email": email_user,
-                "phone": {
-                    "area_code": "57",
-                    "number": celular_user
-                },
-                "identification": {
-                    "type": tipo_documento,
-                    "number": numero_documento,
-                },
-                "address": direccion_parser
-            },
-            "back_urls": {
-                "success": "https://www.success.com",
-                "failure": "http://www.failure.com",
-                "pending": "http://www.pending.com"
-            },
-            "auto_return": "approved",
-            "payment_methods": {
-                "excluded_payment_methods": [],
-                "excluded_payment_types": [],
-                "installments": 12
-            },
-            "notification_url": "https://www.your-site.com/ipn",
-            "statement_descriptor": "Moda Sin Fronteras",
-            "external_reference": "Reference_1234",
-            "expires": True,
-        }
-
-        preference_response = sdk.preference().create(preference_data)
-        preference = preference_response["response"]
-        
-        context = {
-            'preference_id': preference['id'],
-        }
-        return render(request, 'metodo_pago.html', context)
-    
-def categorias(request):
-    categorias_all = Categorias.objects.all()
-    return render(request, 'categorias.html', {'categoria':categorias_all})
-    
+        data = JSONParser().parse(request)
+        serializer = MessageSerializer(data=data)
+        if serializer.is_valid():
+            serializer.save()
+            return JsonResponse(serializer.data, status=201)
+        return JsonResponse(serializer.errors, status=400)
 
 
