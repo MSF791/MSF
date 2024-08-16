@@ -94,7 +94,7 @@ WSGI_APPLICATION = 'ecommerce.wsgi.application'
 # }
 DATABASES = {
     'default': dj_database_url.config(
-        default='postgresql://moda_sin_fronteras_dev_user:7n8eaovm6OTBTT3aayH5lNwQUFnNu5au@dpg-cqv981ggph6c738nnaqg-a/moda_sin_fronteras_dev'
+        default='postgres://moda_sin_fronteras_dev_user:7n8eaovm6OTBTT3aayH5lNwQUFnNu5au@dpg-cqv981ggph6c738nnaqg-a:5432/moda_sin_fronteras_dev'
     )
 }
 # DATABASES = {
