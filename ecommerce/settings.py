@@ -82,21 +82,21 @@ WSGI_APPLICATION = 'ecommerce.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': 'tienda',
-#         'USER':'postgres',
-#         'PASSWORD':'1234',
-#         'HOST':'localhost',
-#         'PORT':'5432',
-#     }
-# }
 DATABASES = {
-    'default': dj_database_url.config(
-        default='postgres://moda_sin_fronteras_dev_user:7n8eaovm6OTBTT3aayH5lNwQUFnNu5au@dpg-cqv981ggph6c738nnaqg-a:5432/moda_sin_fronteras_dev'
-    )
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'tienda',
+        'USER':'postgres',
+        'PASSWORD':'1234',
+        'HOST':'localhost',
+        'PORT':'5432',
+    }
 }
+# DATABASES = {
+#     'default': dj_database_url.config(
+#         default='postgres://moda_sin_fronteras_dev_user:7n8eaovm6OTBTT3aayH5lNwQUFnNu5au@dpg-cqv981ggph6c738nnaqg-a:5432/moda_sin_fronteras_dev'
+#     )
+# }
 # DATABASES = {
 #     'default': dj_database_url.config(
 #         default='postgres://USER:PASSWORD@HOST:PORT/NAME'

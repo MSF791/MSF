@@ -30,4 +30,5 @@ urlpatterns = [
     path('account', editar_usuario, name='editar_usuario'),
     path('password', recuperar_contraseña, name='password'),
     path('reset_password/<str:token>/<str:email>/', reset_password, name='reset_password'),
+    path('categorias/',categorias,name='categorias')
 ]

@@ -584,5 +584,10 @@ def message_list(request, sender=None, receiver=None):
             serializer.save()
             return JsonResponse(serializer.data, status=201)
         return JsonResponse(serializer.errors, status=400)
+    
+def categorias(request):
+    categoria = Categorias.objects.all()
+    return render(request, 'categorias.html', {'categorias':categoria})
+
 
 
