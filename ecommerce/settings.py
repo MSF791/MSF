@@ -15,6 +15,7 @@ from pathlib import Path
 # import dj_database_url
 
 import os
+import dj_database_url
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -81,22 +82,21 @@ WSGI_APPLICATION = 'ecommerce.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'tienda',
-        'USER':'postgres',
-        'PASSWORD':'1234',
-        'HOST':'localhost',
-        'PORT':'5432',
-    }
-}
-
 # DATABASES = {
-#     'default': dj_database_url.config(
-#         default='postgres://dev_msf_rac4_user:5P62Mcp3vhLx1qoyWSPXBUHuwA2FSIc8@dpg-co6b3ngl6cac73a6fndg-a.oregon-postgres.render.com/dev_msf_rac4'
-#     )
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'tienda',
+#         'USER':'postgres',
+#         'PASSWORD':'1234',
+#         'HOST':'localhost',
+#         'PORT':'5432',
+#     }
 # }
+DATABASES = {
+    'default': dj_database_url.config(
+        default='postgres://moda_sin_fronteras_dev_user:7n8eaovm6OTBTT3aayH5lNwQUFnNu5au@dpg-cqv981ggph6c738nnaqg-a:5432/moda sin fronteras dev'
+    )
+}
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
