@@ -1,0 +1,193 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+section{
+    display: flex;
+    justify-content: start;
+    align-items: start;
+    min-height: 100vh;
+    width: 80vw;
+    overflow: hidden;
+    box-sizing: border-box;
+}
+
+.container_card{
+    position: relative;
+    z-index: 1;
+    display: flex;
+    justify-content: start;
+    align-items: start;
+    flex-wrap: wrap;
+    width: 100%;
+}
+
+.container_card .card_modified{
+    position: relative;
+    width: 300px;
+    height: 400px;
+    margin: 20px 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    background: rgba(255, 255, 255, 0.2);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    backdrop-filter: blur(15px);
+}
+
+.container_card .card_modified .imgBx{
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    padding: 20px;
+    transition: 0.5s ease-in-out;
+}
+
+.container_card .card_modified:hover .imgBx{
+    transform: translateY(-85px);
+}
+
+.container_card .card_modified .imgBx img{
+    max-width: 100%;
+    margin: 0 0 20px;
+    transition: 0.5s ease-in-out;
+}
+
+.container_card .card_modified:hover .imgBx img{
+    transform: translate(-5px, -40px) scale(1.2);
+}
+
+.container_card .card_modified .imgBx h2{
+    color: #fff;
+    font-weight: 600;
+    transition: 0.2s ease-in-out;
+}
+
+body.light-mode .container_card .card_modified .imgBx h2{
+    color: #161616;
+}
+
+.container_card .card_modified:hover .imgBx h2{
+    transform: translateY(-20px);
+}
+
+.container_card .card_modified .content{
+    position: absolute;
+    bottom: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    transition: 0.5s ease-in-out;
+    opacity: 0;
+    visibility: hidden;
+}
+
+.container_card .card_modified:hover .content{
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(-8px);
+}
+
+.container_card .card_modified .content .size,
+.container_card .card_modified .content .color{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 8px 20px;
+}
+
+.container_card .card_modified .content .size h3,
+.container_card .card_modified .content .color h3{
+    color: #fff;
+    font-weight: 300;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-right: 10px;
+}
+
+body.light-mode .container_card .card_modified .content .color h3{
+    color: #161616;
+}
+
+.container_card .card_modified .content .size span{
+    width: 26px;
+    height: 26px;
+    text-align: center;
+    line-height: 24px;
+    display: inline-block;
+    color: #111;
+    background: #fff;
+    border-radius: 4px;
+    font-size: 14px;
+    margin: 0 5px;
+    font-weight: 500;
+    transition: 0.5;
+    cursor: pointer;
+}
+
+.container_card .card_modified .content .size span:hover{
+    background: #9bdc28;
+}
+
+.container_card .card_modified .content .color span{
+    width: 20px;
+    height: 20px;
+    background: #f00;
+    border-radius: 50%;
+    margin: 0 5px;
+    border: 2px solid #fff;
+    box-sizing: border-box;
+    cursor: pointer;
+}
+
+.container_card .card_modified .content .color span:nth-child(2){
+    background: #9bdc28;
+}
+.container_card .card_modified .content .color span:nth-child(3){
+    background: #03a9f4;
+}
+.container_card .card_modified .content .color span:nth-child(4){
+    background: #e91e63;
+}
+
+.container_card .card_modified .content a{
+    position: relative;
+    top: 18px;
+    display: inline-block;
+    padding:  12px 30px;
+    background: #fff;
+    border-radius: 40px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    color: #111;
+    text-decoration: none;
+    text-transform: uppercase;
+}
+
+body.light-mode .container_card .card_modified .content a{
+    border: 1px solid black;
+}
+
+.no-stock{
+    width: 100%;
+    height: 110px;
+    background-color: #f00;
+    border-radius: 12%;
+}
+
+.no-stock h2{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    font-size: 16px;
+    padding-top: 30px;
+    margin-top: 20px;
+}

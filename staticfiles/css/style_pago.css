@@ -1,0 +1,23 @@
+.container_pago{
+    margin-top: 10%;
+    padding-bottom: 15%;
+    box-shadow: 5px 5px 10px #FE4748;
+}
+.container_pago h1{
+    text-align: center;
+}
+.container_pago a{
+    text-decoration: none;
+    width: 110px;
+    height: 100px;
+    background-color: #FE4748;
+    padding: 6px;
+    border-radius: 3px;
+    text-align: center;
+    color: white;
+    margin-left: 48%;
+}
+
+.container_pago a:hover{
+    color: black;
+}

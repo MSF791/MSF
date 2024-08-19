@@ -1,0 +1,128 @@
+.carousel-container {
+    width: 500px;
+    position: relative;
+    max-width: 500px;
+    margin: auto;
+}
+
+.carousel {
+    display: flex;
+    overflow: hidden;
+}
+
+.carousel-item {
+    transition: transform 0.5s ease;
+}
+
+.card {
+    text-align: center;
+    padding: 20px;
+}
+
+.card-body{
+    margin-top: 20px;
+}
+
+body.light-mode .card-body{
+    color: rgb(0, 0, 0);
+}
+
+.card .btn {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 20px;
+    text-decoration: none;
+    border-radius: 5px;
+}
+
+.card .btn:hover {
+    background-color: #0056b3;
+}
+
+.carousel-control {
+    position: absolute;
+    top: 60%;
+    transform: translateY(-50%);
+    font-size: 24px;
+    color: white; /* Cambiar a color blanco */
+    border: none;
+    cursor: pointer;
+    padding: 10px;
+    z-index: 1;
+    user-select: none;
+}
+
+.prev {
+    left: -40px; /* Ajustar posición desde el borde izquierdo */
+}
+
+.next {
+    left: 480px !important; /* Ajustar posición desde el borde derecho */
+}
+
+/* mediaqueries responsive */
+
+@media (max-width: 300px) {
+    .carousel-container {
+        width: 250px;
+        position: relative;
+        margin: auto;
+    }
+    .prev {
+        left: -30px; /* Ajustar posición desde el borde izquierdo */
+    }
+    
+    .next {
+        left: 230px !important; /* Ajustar posición desde el borde derecho */
+    }
+}
+
+@media (max-width: 300px) {
+    .slide .item:nth-child(1),
+    .slide .item:nth-child(2){
+        top: 0;
+        left: 0;
+        transform: translate(0,0);
+        border-radius: 0;
+        width: 100%;
+        height: 100%;
+    }
+
+    .slide .item:nth-child(3){
+        left: 100%;
+    }
+    .slide .item:nth-child(4),
+    .slide .item:nth-child(5),
+    .slide .item:nth-child(n + 6){
+        left: 150%;
+        opacity: 0;
+    }
+
+    /* Reducir el tamaño de la fuente y los elementos dentro de .content */
+    .item .content{
+        width: 150px;
+        left: 25px;
+    }
+    .content .name{
+        font-size: 24px;
+    }
+    .content .des{
+        font-size: 12px;
+    }
+    .content button{
+        font-size: 12px;
+        padding: 8px 16px;
+    }
+}
+@media (max-width: 300px) {
+    .container_image .slide .item {
+        width: 100%; /* Ajusta el ancho para pantallas pequeñas */
+        height: 650px; /* Ajusta la altura para pantallas pequeñas */
+    }
+
+    .slide .item:nth-child(3) {
+        left: 60%; /* Asegúrate de que este valor sea adecuado para el diseño */
+    }
+}
+
+
