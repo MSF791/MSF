@@ -1,1 +1,1 @@
-web: gunicorn --bind 0.0.0.0:10000 ecommerce.wsgi
+web: gunicorn ecommerce.wsgi --log-file -
