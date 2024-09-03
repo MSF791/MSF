@@ -1,28 +1,27 @@
 from django.db import models
 from django.contrib.auth.models import User
 
-
 class Stock(models.TextChoices):
-    si = 'si'
-    no = 'no'
+    SI = 'si', 'Sí'
+    NO = 'no', 'No'
 
-#agregar colores en opciones
+# agregar colores en opciones
 class Colors(models.TextChoices):
-    blanco = 'Blanco'
-    negro = 'Negro'
-    naranja = 'Naranja'
-    azul = 'Azul'
-    amarillo = 'Amarillo'
-    cafe = 'Cafe'
-    rojo = 'Rojo'
+    BLANCO = 'Blanco', 'Blanco'
+    NEGRO = 'Negro', 'Negro'
+    NARANJA = 'Naranja', 'Naranja'
+    AZUL = 'Azul', 'Azul'
+    AMARILLO = 'Amarillo', 'Amarillo'
+    CAFE = 'Cafe', 'Café'
+    ROJO = 'Rojo', 'Rojo'
 
-#agregar tallas en opciones
+# agregar tallas en opciones
 class Tallas(models.TextChoices):
-    extra_pequeña = 'XS'
-    pequeña = 'S'
-    mediana = 'M'
-    grande = 'L'
-    extra_grande = 'XL'
+    XS = 'XS', 'Extra Pequeña'
+    S = 'S', 'Pequeña'
+    M = 'M', 'Mediana'
+    L = 'L', 'Grande'
+    XL = 'XL', 'Extra Grande'
 
 #categorias
 class Categorias(models.Model):
@@ -37,12 +36,12 @@ class Producto(models.Model):
     nombre=models.CharField(max_length=30)
     descripcion=models.CharField(max_length=500)
     precio=models.IntegerField(default='0')
-    stock=models.CharField(max_length=3, choices=Stock)
+    stock=models.CharField(max_length=3, choices=Stock.choices)
     imagen = models.ImageField(upload_to='imagenes', null=True)
     en_lista_deseos = models.BooleanField(default=False)
     #actualizacion para detalles del producto
-    color = models.CharField(max_length=50, choices=Colors, default='Blanco')
-    talla = models.CharField(max_length=50, choices=Tallas, default='S')
+    color = models.CharField(max_length=50, choices=Colors.choices, default='Blanco')
+    talla = models.CharField(max_length=50, choices=Tallas.choices, default='S')
     categoria = models.ManyToManyField(Categorias)
 
 class ItemCarrito(models.Model):

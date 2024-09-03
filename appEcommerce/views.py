@@ -588,6 +588,3 @@ def message_list(request, sender=None, receiver=None):
 def categorias(request):
     categoria = Categorias.objects.all()
     return render(request, 'categorias.html', {'categorias':categoria})
-
-
-

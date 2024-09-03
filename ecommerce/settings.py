@@ -16,6 +16,12 @@ from pathlib import Path
 
 import os
 
+from dotenv import load_dotenv
+import os
+
+load_dotenv() 
+
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -81,19 +87,22 @@ WSGI_APPLICATION = 'ecommerce.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
+print('esta es la password: ', os.getenv('PGPASSWORD'))
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'msf_dev',
-        'USER':'julian',
-        'PASSWORD':'secret_2024',
-        'HOST':'modasinfronteras.postgres.database.azure.com',
-        'PORT':'5432',
-        'OPTIONS':{
-            'sslmode':'require',
-        },
+        'NAME': os.getenv('PGDATABASE'),
+        'USER': os.getenv('PGUSER'),
+        'PASSWORD': os.getenv('PGPASSWORD'),
+        'HOST': os.getenv('PGHOST'),
+        'PORT': os.getenv('PGPORT', 5432),
+        'OPTIONS': {
+            'sslmode': 'require',
+        }
     }
 }
+
 # DATABASES = {
 #     'default': dj_database_url.config(
 #         default='postgres://moda_sin_fronteras_dev_user:7n8eaovm6OTBTT3aayH5lNwQUFnNu5au@dpg-cqv981ggph6c738nnaqg-a:5432/moda_sin_fronteras_dev'
