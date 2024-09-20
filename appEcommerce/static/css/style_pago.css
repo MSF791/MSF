@@ -6,6 +6,9 @@
 .container_pago h1{
     text-align: center;
 }
+.container_pago h3{
+    text-align: center;
+}
 .container_pago a{
     text-decoration: none;
     width: 110px;

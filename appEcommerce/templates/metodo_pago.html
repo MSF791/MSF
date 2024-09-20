@@ -17,6 +17,8 @@
     <!--Boton De Pago Inicio-->
     <div class="container_pago">
         <h1>Metodos De Pago</h1><br>
+        <h3>Como Deseas Pagar? {{ name_user }}</h3>
+        <br>
         <div id="wallet_container">
         </div>
         <a href="{% url 'check' %}">Volver</a>
@@ -31,7 +33,7 @@
 
     <!--Script Mercado Pago-->
     <script>
-      const mp = new MercadoPago('APP_USR-e392ee13-bd2a-4ebb-8df5-dff6fa4305c3', {
+      const mp = new MercadoPago('APP_USR-5215c7bd-6591-46d9-9018-a338b7a2949d', {
         locale: 'es-CO'
       });
     

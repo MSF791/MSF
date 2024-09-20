@@ -569,14 +569,6 @@ def message_list(request, sender=None, receiver=None):
 
         return render(request, 'chat.html', {'messages': messages, 'sender': sender, 'receiver': receiver, 'users': User.objects.exclude(username=request.user.username)})
 
-        messages = Message.objects.filter(
-            Q(sender_id=sender, receiver_id=receiver) | Q(sender_id=receiver, receiver_id=sender),
-            is_read=False
-        )
-
-        return render(request, 'chat.html', {'messages': messages, 'sender': sender, 'receiver': receiver, 'users': User.objects.exclude(username=request.user.username)})
-
-
     elif request.method == 'POST':
         data = JSONParser().parse(request)
         serializer = MessageSerializer(data=data)
@@ -588,3 +580,128 @@ def message_list(request, sender=None, receiver=None):
 def categorias(request):
     categoria = Categorias.objects.all()
     return render(request, 'categorias.html', {'categorias':categoria})
+
+def detalles_venta(request):
+        if request.method == 'POST':
+            #obtener productos del formulario
+            ids_productos = request.POST.getlist('id_producto')
+            nombres_productos = request.POST.getlist('nombre_producto')
+            cantidad_productos = request.POST.getlist('cantidad_producto')
+            precio_producto = request.POST.getlist('precio_producto')
+            descripcion_producto = request.POST.getlist('descripcion_producto')
+            #obtener datos del cliente
+            name_user = request.POST['name_user']
+            apellido_user = request.POST['apellido_user']
+            tipo_documento = request.POST['tipo_documento']
+            numero_documento = request.POST['numero_documento']
+            direccion_user = request.POST['direccion_user']
+            direccion_split = direccion_user.split('#')
+            email_user = request.POST['email_user']
+            celular_user = request.POST['celular_user']
+            # separar direccion
+            street_name = direccion_split[0].strip()
+            street_number = direccion_split[1].split('-')[0].strip()  
+            # zip_code 
+            zip_code = request.POST.get('zip_code', '000000')
+            
+            items_preference = []
+
+            for i in range(len(ids_productos)):
+                # Reemplazar la coma por punto y convertir a float
+                precio = precio_producto[i].replace(',', '')
+                item = {
+                    "id": ids_productos[i],
+                    "title": nombres_productos[i],
+                    "currency_id": "BRL",
+                    "picture_url": "https://www.mercadopago.com/org-img/MP3/home/logomp3.gif",
+                    "description": descripcion_producto[i],
+                    "category_id": "art",
+                    "quantity": int(cantidad_productos[i]), 
+                    "unit_price": int(precio)
+                }
+                items_preference.append(item)
+            
+        sdk = mercadopago.SDK("APP_USR-5028953217533546-080114-c52fc275c338c9de19c4d7cefd88bead-1691666992")
+        # crear una preferencia
+        preference_data = {
+            "items": items_preference,
+            "payer": {
+                "name": f"{name_user}",
+                "surname": f"{apellido_user}",
+                "email": f"{email_user}",
+                "phone": {
+                    "area_code": "57",
+                    "number": f"{celular_user}"
+                },
+                "identification": {
+                    "type": f"{tipo_documento}",
+                    "number": f"{numero_documento}"
+                },
+                "address": {
+                    "street_name": f"{street_name}",
+                    "street_number": street_number,
+                    "zip_code": f"{zip_code}"
+                }
+            },
+            "back_urls": {
+                "success": "https://www.success.com",
+                "failure": "http://www.failure.com",
+                "pending": "http://www.pending.com"
+            },
+            "auto_return": "approved",
+            "payment_methods": {
+            "excluded_payment_methods" : [],
+            "excluded_payment_types" : [],
+            "installments" : 12
+            },
+            "notification_url": "https://msf-cktv.onrender.com/notifications/",
+            "statement_descriptor": "MSF",
+            "external_reference": "Reference_1234",
+        }
+        #obtener respuesta
+        preference_response = sdk.preference().create(preference_data)
+        preference = preference_response["response"]
+        contexto = {
+            'preference_id': preference['id'],
+            'name_user':name_user
+        }
+        return render(request, 'metodo_pago.html', contexto)
+
+@csrf_exempt
+def notifications_pay(request):
+    if request.method == 'POST':
+        sdk = mercadopago.SDK("APP_USR-5028953217533546-080114-c52fc275c338c9de19c4d7cefd88bead-1691666992")
+        # Procesa la notificación de Mercado Pago
+        data = json.loads(request.body)
+        
+        if data.get('type') == 'payment' and 'data' in data:
+            payment_id = data['data']['id']  # Obtén el ID del pago
+            
+            # Consulta los detalles del pago usando el SDK de Mercado Pago
+            payment_info = sdk.payment().get(payment_id)
+            status = payment_info['response']['status']  # Obtén el estado del pago
+
+            if status == 'approved':
+                # Obtener la información de productos, cliente y orden
+                additional_info = payment_info['response'].get('additional_info', {})
+                payer_info = additional_info.get('payer', {})
+                items_info = additional_info.get('items', [])
+
+                # Crear el contenido del correo
+                productos = "\n".join([f"Producto: {item['title']} - Cantidad: {item['quantity']} - Precio: {item['unit_price']}" for item in items_info])
+                cliente = f"{payer_info['first_name']} {payer_info['last_name']}\nDirección: {payer_info['address']['street_name']} #{payer_info['address']['street_number']}\nEmail: {payment_info['response']['payer']['email']}\nTeléfono: {payer_info['phone']['area_code']}-{payer_info['phone']['number']}"
+
+                # Enviar el correo tanto al cliente como a modasinfronteras2@gmail.com
+                send_mail(
+                    subject="Confirmación de pago exitoso",
+                    message=f"Estimado {payer_info['first_name']},\n\nSu pago ha sido aprobado exitosamente.\n\nInformación de la orden:\n{productos}\n\nInformación personal:\n{cliente}\n\nGracias por su compra.",
+                    from_email="modasinfronteras2@gmail.com",
+                    recipient_list=['modasinfronteras2@gmail.com'],
+                    fail_silently=False,
+                )
+
+                print("PAGO CON ÉXITO y correo enviado.")
+
+        return JsonResponse({'status': 'success'})
+    
+    return JsonResponse({'error': 'invalid request'}, status=400)
