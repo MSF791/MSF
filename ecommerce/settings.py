@@ -91,7 +91,7 @@ DATABASES = {
         'HOST': os.getenv('PGHOST'),
         'PORT': os.getenv('PGPORT', 5432),
         'OPTIONS': {
-            'sslmode': 'disable',
+            'sslmode': 'require',
         }
     }
 }
